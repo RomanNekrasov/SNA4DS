@@ -47,10 +47,17 @@ E.g. for pycharm: https://github.com/github/gitignore/blob/main/Global/JetBrains
 ### Using Constants
 Constants are used for all variables that are used multiple times and/or over multiple files  
 Capitalize them.
-1. personal constants: everytime you need a variable that's personal and where other team memebers have their personal version of it e.g. google drive path for data or a personal API key put it in the personal constant file. This file is in the gitignore so it is not updated. Reference the personal constant in the normal constant file so people know to put a new constant in the personal file. Look at the files now for an example for the drive path. 
+1. personal constants: everytime you need a variable that's personal and where other team memebers have their personal version of it e.g. google drive path for data or a personal API key put it in the personal constant file. This file is in the gitignore so it is not updated. Reference the personal constant in the normal constant file so people know to put a new constant in the personal file. Look at the files first for an example for the drive path. 
 2. constant file: Put in constants to use and make personal constants global.
 3. Import using: `import constants as c`
 4. Use the constant in the code where needed with: `c.CONSTANT`
+5. Use a name that exactly describes the constant, do this for all variables actually.
+
+### Using branches
+You can not commit directly to main.  
+If you work on something new or change some existing make a branch first.  
+You are able to merge the brange yourself but if you do some collabarative work it's better to let a peer check it.  
+Use proper names for branches.
 
 ## Authors
 - Andy Huang
