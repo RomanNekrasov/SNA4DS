@@ -8,7 +8,6 @@
       <a href="#about-the-project">About The Project</a>
       <ul>
         <li><a href="#built-with">Built With</a></li>
-        <li><a href="#project-structure">Project Structure</a></li>
       </ul>
     </li>
     <li><a href="#getting-started">Getting Started</a></li>
@@ -23,6 +22,9 @@ Examine the presence and structure of echo chambers within YouTube comment secti
 ### Built With
 [![Python 3.11](https://img.shields.io/badge/Python-3.11-3776AB)](https://www.python.org/downloads/)
 ![R 4.3.1](https://img.shields.io/badge/R-4.3.1-3776AB)
+
+### Project Structure
+Folder structure, stack.
 
 ## Getting Started
 ### Using venv:
