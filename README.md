@@ -25,6 +25,7 @@ Examine the presence and structure of echo chambers within YouTube comment secti
 
 ### Project Structure
 Folder structure, stack.
+I do not now how yet, keep python and r in different folders and start from there?
 
 ## Getting Started
 ### Using venv:
