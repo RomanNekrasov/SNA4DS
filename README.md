@@ -31,7 +31,7 @@ Folder structure, stack.
 1. Clone the repository into a specific directory: `git clone https://github.com/RomanNekrasov/SNA4DS.git`
 2. Enter project directory: `cd SNA4DS`
 3. Create a virtual environment: `python -m venv envsna`
-4. Activate virtual environment: `windows: envsna\Scripts\activate or mac: source myenv/bin/activate`
+4. Activate virtual environment: `windows: envsna\Scripts\activate or mac: source envsna/bin/activate`
 5. Install needed packages just with pip: `pip install package`
 6. If you use external dependencies share them with: `pip freeze > requirements.txt`
 7. Other can than install packages: `pip install requirements.txt`
