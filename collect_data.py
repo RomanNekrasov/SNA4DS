@@ -3,12 +3,17 @@ import pandas as pd
 import numpy as np
 import logging
 import sys
+import os
 import googleapiclient.discovery
-import json
 import personalConstants as pc
 import constants as c
 
-logging.basicConfig(stream=sys.stdout, level=logging.INFO)
+
+# Disable OAuthlib's HTTPS verification when running locally.
+# *DO NOT* leave this option enabled in production.
+os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1" # From the documentation https://developers.google.com/youtube/v3/docs/
+
+logging.basicConfig(stream=sys.stdout, level=logging.INFO) # to see what the code is doing when running
 
 def add_to_frame(edge_df, an_item):
   """ Takes the dataframe and appends an item to the rows
@@ -24,30 +29,78 @@ def add_to_frame(edge_df, an_item):
   edge_df.loc[len(edge_df)+1] = an_item
   return edge_df
 
-def send_request(pageToken=None):
-  """Base function for communicating with the youtube API
-
-  Keyword arguments:
-  pageToken -- the token received from the previous request
-  Return: the response from the API in JSON format
-  """
-
-  API_KEY=pc.YOUTUBEAPIKEY
+def enable_api():
+  API_KEY=c.YOUTUBEAPIKEY
   API_SERVICE_NAME = c.API_SERVICE_NAME
   API_VERSION = c.API_VERSION
 
   youtube = googleapiclient.discovery.build(
       API_SERVICE_NAME, API_VERSION, developerKey=API_KEY, cache_discovery=False)
+  return youtube
 
+def get_comments_from_threath(threath_id):
+  """This function gets the replies to a top level comment
+
+  Keyword arguments:
+  threath_id -- str: that is the id of the top level comment
+  Return: all the replies in a list
+  """
+  youtube = enable_api()
+
+  # sending first request
+  request_comments = youtube.comments().list(
+      part = "snippet",
+      parentId = threath_id,
+      maxResults = 100
+  )
+
+  data = request_comments.execute()
+  replies = data['items'] # initial list of replies
+
+  # getting the pagetoken if there is one
+  if 'nextPageToken' in set(data.keys()):
+    pageToken = data['nextPageToken']
+  else:
+    pageToken = None
+
+  while pageToken: # if there is a next page, getting those replies as well
+    request_comments = youtube.comments().list(
+        part = "snippet",
+        parentId = threath_id,
+        pageToken = pageToken,
+        maxResults = 100
+    )
+    data = request_comments.execute()
+
+    # now merge the two lists
+    replies = replies + data['items']
+
+    # getting the pagetoken if there is one
+    if 'nextPageToken' in set(data.keys()):
+      pageToken = data['nextPageToken']
+    else:
+      pageToken = None
+  logging.info('Replies collected')
+  return replies
+
+def send_request(videoId, pageToken=None):
+  """Base function for communicating with the youtube API
+     it uses the YouTube commentThreads to get the top level comments
+
+  Keyword arguments:
+  pageToken -- the token received from the previous request
+  Return: the response from the API in JSON format
+  """
+  youtube = enable_api()
   if pageToken == None:
     request = youtube.commentThreads().list(
         part="snippet,replies",
-        videoId="1pWjP9QNLcg",
+        videoId=videoId,
     )
   else:
     request = youtube.commentThreads().list(
         part="snippet,replies",
-        videoId="1pWjP9QNLcg",
+        videoId=videoId,
         pageToken=pageToken
     )
   data = request.execute()
@@ -68,67 +121,74 @@ def parse_item_top_comment(an_item):
   kind = an_item['kind']  # always 'youtube#commentThread'
   time = an_item['snippet']['topLevelComment']['snippet']['publishedAt']
   author = an_item['snippet']['topLevelComment']['snippet']['authorChannelId']['value']
+  num_replies = an_item['snippet']['totalReplyCount']
   likes = an_item['snippet']['topLevelComment']['snippet']['likeCount']
   text = an_item['snippet']['topLevelComment']['snippet']['textOriginal']
   dest = np.nan # top comment has no destination
-  return comment_id, threath_id, time, kind, author, dest, likes, text, video_id
+  return comment_id, threath_id, time, kind, author, dest, likes, num_replies, text, video_id
 
-def parse_reply(a_reply):
-  video_id = a_reply['snippet']['videoId']
+def parse_reply(a_reply, video_id):
+  video_id = video_id
   threath_id = a_reply['snippet']['parentId']
   comment_id = a_reply['id']
   kind = a_reply['kind'] # always 'youtube#comment'
   time = a_reply['snippet']['publishedAt']
   author = a_reply['snippet']['authorChannelId']['value']
   likes = a_reply['snippet']['likeCount']
+  num_replies = np.nan # for youtube#comment there are no replies
   text = a_reply['snippet']['textOriginal']
 
   if '@' in text:
-    dest = re.findall(r'@(\w+)', text)[0]
+    dest = re.findall(r"@(\S+\s*\S*)", text)[0]
   else:
     dest = ''
 
-  return comment_id, threath_id, time, kind, author, dest, likes, text, video_id
+  return comment_id, threath_id, time, kind, author, dest, likes, num_replies, text, video_id
 
-def collect_comments(edge_df):
-  if len(edge_df) > 50000:
-    logging.info('Dataframe is full')
-    return edge_df
+def collect_comments(videoId, edge_df):
+  """Function that combines the other functions to collect the comments
+
+  Keyword arguments:
+  edge_df -- a pandas dataframe that will be filled with the comments
+  Return: the dataframe with the comments
+  """
 
   # sending initial request
-  response = send_request()
+  response = send_request(videoId=videoId)
   while len(edge_df) < 300000:
     # Parsing
     items = response['items']
-    for x in items:
+    for x in items: # x is a top level comment item
       # top level comment
       item = parse_item_top_comment(x)
+      video_id = item[9]
       edge_df = add_to_frame(edge_df, item)
 
-      # replies to top level comment
-      if 'replies' in set(x.keys()):
-        replies = x['replies']['comments']
+      if x["snippet"]["totalReplyCount"] > 0:
+        threath_id = item[1]
+        replies = get_comments_from_threath(threath_id=threath_id)
         for reply in replies:
-          reply = parse_reply(reply)
+          reply = parse_reply(reply, video_id) # had to give it video id because this is not in the reply repsonse
           edge_df = add_to_frame(edge_df, reply)
 
      # sending next request
     if 'nextPageToken' in set(response.keys()):
-      response = send_request(pageToken=response['nextPageToken'])
-      logging.info('Next page')
+      response = send_request(videoId=videoId, pageToken=response['nextPageToken'])
+      logging.info('Requesting Next page')
     else:
-      logging.info('No more pages')
+      logging.info('Returned because: No more pages')
       return edge_df
-  logging.info('The other option')
+  logging.info('Returned because: The other option')
   return edge_df
 
-def main(edge_df):
-  edge_df = collect_comments(edge_df=edge_df)
+def main(videoId, edge_df):
+  edge_df = collect_comments(videoId=videoId, edge_df=edge_df)
   edge_df.to_csv('edge_df.csv')
   print('executed')
 
 # defining what result df should look like
-edge_df = pd.DataFrame(columns=['comment_id', 'threath_id', 'time', 'kind', 'author', 'dest', 'likes', 'text', 'video_id'])
+edge_df = pd.DataFrame(columns=['comment_id', 'threath_id', 'time', 'kind', 'author',
+                                'dest', 'likes','num_replies','text', 'video_id'])
 
 # main function call
-main(edge_df=edge_df)
+main(videoId="1pWjP9QNLcg", edge_df=edge_df)

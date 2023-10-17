@@ -165,3 +165,7 @@ personalConstants.py
 
 # Datafiles
 *.csv
+*.json
+
+# My test notebook
+test.ipynb
