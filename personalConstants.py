@@ -6,4 +6,4 @@ import os
 # once again this file is in the gitignore so it does not track changes you do on your own machine, make sure to import the personal constant in the global constants.py
 GOOGLEDRIVEROOT = os.path.join('G:', 'My Drive', 'JADS group 1')
 
-YOUTUBEAPIKEY = 123
+YOUTUBEAPIKEY = "AIzaSyDKyW4Cekf8K3qakl_seuphE54xscEtJP4"
