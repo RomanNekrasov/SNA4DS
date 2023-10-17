@@ -15,7 +15,7 @@ os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1" # From the documentation https:/
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO) # to see what the code is doing when running
 
-def add_to_frame(edge_df, an_item):
+def add_to_frame(frame, an_item):
   """ Takes the dataframe and appends an item to the rows
 
   Keyword arguments:
@@ -26,8 +26,8 @@ def add_to_frame(edge_df, an_item):
   returns the dataframe with the appended item
   """
 
-  edge_df.loc[len(edge_df)+1] = an_item
-  return edge_df
+  frame.loc[len(frame)+1] = an_item
+  return frame
 
 def enable_api():
   API_KEY=c.YOUTUBEAPIKEY
@@ -180,15 +180,3 @@ def collect_comments(videoId, edge_df):
       return edge_df
   logging.info('Returned because: The other option')
   return edge_df
-
-def main(videoId, edge_df):
-  edge_df = collect_comments(videoId=videoId, edge_df=edge_df)
-  edge_df.to_csv('edge_df.csv')
-  print('executed')
-
-# defining what result df should look like
-edge_df = pd.DataFrame(columns=['comment_id', 'threath_id', 'time', 'kind', 'author',
-                                'dest', 'likes','num_replies','text', 'video_id'])
-
-# main function call
-main(videoId="1pWjP9QNLcg", edge_df=edge_df)
