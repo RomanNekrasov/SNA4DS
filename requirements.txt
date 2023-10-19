@@ -1,1 +1,8 @@
-
+pandas
+numpy
+re
+logging
+sys
+os
+google-api-python-client
+datetime
