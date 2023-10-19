@@ -86,6 +86,7 @@ ipython_config.py
 #   For a library or package, you might want to ignore these files since the code is
 #   intended to run in multiple environments; otherwise, check them in:
 # .python-version
+envsna/
 
 # pipenv
 #   According to pypa/pipenv#598, it is recommended to include Pipfile.lock in version control.
@@ -127,7 +128,6 @@ venv/
 ENV/
 env.bak/
 venv.bak/
-envsna
 
 # Spyder project settings
 .spyderproject
@@ -160,6 +160,7 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 .idea/
 
+
 # Ignoring the personal constants file
 personalConstants.py
 
@@ -175,3 +176,5 @@ scraped-*
 # Notebooks
 scraped_data_analysis.ipynb
 tests.ipynb
+
+.DS_Store
