@@ -8,7 +8,6 @@ import googleapiclient.discovery
 import personalConstants as pc
 import constants as c
 
-
 # Disable OAuthlib's HTTPS verification when running locally.
 # *DO NOT* leave this option enabled in production.
 os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1" # From the documentation https://developers.google.com/youtube/v3/docs/
@@ -114,7 +113,6 @@ def parse_item_top_comment(an_item):
   an_item -- This is one of the items from the list of items that is returned from the API call
   Return: returns a tuple with the parsed data see below for the order
   """
-
   video_id = an_item['snippet']['videoId']
   threath_id = an_item['id']
   comment_id = threath_id # top comment has the same id as the thread

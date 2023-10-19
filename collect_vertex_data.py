@@ -15,6 +15,7 @@ def request_channel_information(ids):
   logging.info(f"Requested channel information")
   return response
 
+
 def parse_responses(response, frame):
   logging.info(f"Number of responses: {len(response['items'])}")
 
