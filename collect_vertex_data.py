@@ -33,29 +33,22 @@ def parse_responses(response, frame):
   return frame
 
 def collect_vertex_data(frame, ids):
+  """ Integration function for requesting channel information and parsing the response
+
+  Keyword arguments:
+  frame -- the dataframe that will be returned it should have 7 columns be in the format:
+            authorId, authorTitle, customUrl, memberSince, subscriberCount, viewCount, videoCount
+  Return: the dataframe with the new information added
+  """
+
   for idset in ids:
     response = request_channel_information(ids=idset)
     frame = parse_responses(response, frame)
   return frame
 
-# 1. send initial request
+# HOW IT WORKS:
+# 1. The author ids are parsed into chunks of 50 items then each chunk is sent as a request
 # 2. Parse the list of items in the response
-#     if there is a nextpagekey:
-# 3. Get the nextpagekey if there is one
-# 4. send new request
-# 5. do the same
-# 6. return the final dataframe
-
-# getting the list of authorIds from the edge df
-def chunks(lst, n):
-    """function that splits the unqiue authorIds into chunks of 50 because the youtube api only allows 50 ids per request
-
-    Keyword arguments:
-    lst: list -- list of authorids
-    Return: a list of strings of comma separated authorIds
-    """
-
-    result = []
-    for i in range(0, len(lst), n):
-        result.append(','.join(lst[i:i + n]))
-    return result
+# 3. Add the parsed items to the dataframe
+# 4. Repeat until all chunks have been requested
+# 5. Return the dataframe

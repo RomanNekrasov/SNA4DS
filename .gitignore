@@ -167,6 +167,7 @@ personalConstants.py
 *.csv
 *.json
 collection17.10.2023/
+scraped-*
 
 #vscode stuf
 .vscode/
