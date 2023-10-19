@@ -41,28 +41,33 @@ I do not now how yet, keep python and r in different folders and start from ther
 We should all have similar R enviroments already.
 
 ### Add to gitignore
-Different IDE's use files we do not want in our repo. Add your own to the .gitignore file  
+Different IDE's use files we do not want in our repo. Add your own to the .gitignore file
 E.g. for pycharm: https://github.com/github/gitignore/blob/main/Global/JetBrains.gitignore
 
 ## Usage
+First clone the repository to your local machine. Using this project to scrape all comments of a youtube video is done by getting your personal api key and pasting it the personalConstants.py file. They one has to copy an Id of a youtube video and paste it in the main function. This results in the script making a new repository named: scraped-{videoId}-{dateTime}. Here there are two .csv files that represent the edges and the vertices.
+
 ### Using Constants
-Constants are used for all variables that are used multiple times and/or over multiple files  
+Constants are used for all variables that are used multiple times and/or over multiple files
 Capitalize them.
-1. personal constants: everytime you need a variable that's personal and where other team memebers have their personal version of it e.g. google drive path for data or a personal API key put it in the personal constant file. This file is in the gitignore so it is not updated. Reference the personal constant in the normal constant file so people know to put a new constant in the personal file. Look at the files first for an example for the drive path. 
+1. personal constants: everytime you need a variable that's personal and where other team memebers have their personal version of it e.g. google drive path for data or a personal API key put it in the personal constant file. This file is in the gitignore so it is not updated. Reference the personal constant in the normal constant file so people know to put a new constant in the personal file. Look at the files first for an example for the drive path.
 2. constant file: Put in constants to use and make personal constants global.
 3. Import using: `import constants as c`
 4. Use the constant in the code where needed with: `c.CONSTANT`
 5. Use a name that exactly describes the constant, do this for all variables actually.
 
 ### Using branches
-You can not commit directly to main.  
-If you work on something new or change some existing make a branch first.  
-You are able to merge the brange yourself but if you do some collabarative work it's better to let a peer check it.  
+You can not commit directly to main.
+If you work on something new or change some existing make a branch first.
+You are able to merge the brange yourself but if you do some collabarative work it's better to let a peer check it.
 Use proper names for branches.
+
+### Contributing to this project
+Please use *snake_case* for variable names in the resulting dataframes
 
 ## Authors
 - Andy Huang
-- Huub van de Voort 
+- Huub van de Voort
 - Oumaima Lemhour
 - Roman Nekrasov
 - Tom Teurlings
