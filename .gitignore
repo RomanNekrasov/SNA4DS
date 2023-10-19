@@ -172,6 +172,6 @@ scraped-*
 #vscode stuf
 .vscode/
 
-# My test notebook
-test.ipynb
+# Notebooks
+scraped_data_analysis.ipynb
 tests.ipynb
