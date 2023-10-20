@@ -174,7 +174,6 @@ scraped-*
 .vscode/
 
 # Notebooks
-scraped_data_analysis.ipynb
 tests.ipynb
 
 .DS_Store

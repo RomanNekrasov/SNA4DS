@@ -29,12 +29,8 @@ def add_to_frame(frame, an_item):
   return frame
 
 def enable_api():
-  API_KEY=c.YOUTUBEAPIKEY
-  API_SERVICE_NAME = c.API_SERVICE_NAME
-  API_VERSION = c.API_VERSION
-
   youtube = googleapiclient.discovery.build(
-      API_SERVICE_NAME, API_VERSION, developerKey=API_KEY, cache_discovery=False)
+      c.API_SERVICE_NAME, c.API_VERSION, developerKey=c.YOUTUBEAPIKEY, cache_discovery=False)
   return youtube
 
 def get_comments_from_threath(threath_id):
