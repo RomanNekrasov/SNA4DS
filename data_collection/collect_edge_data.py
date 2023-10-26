@@ -1,12 +1,10 @@
 import re
-import pandas as pd
 import numpy as np
 import logging
 import sys
 import os
 import googleapiclient.discovery
-import personalConstants as pc
-import constants as c
+from config import constants as c
 
 # Disable OAuthlib's HTTPS verification when running locally.
 # *DO NOT* leave this option enabled in production.
