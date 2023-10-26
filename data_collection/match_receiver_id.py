@@ -40,4 +40,5 @@ def match_receiver_id(edge_df, vertex_df):
   # filling the edge_df destId column
   edge_df['dest_id'] = edge_df['dest_scraped'].apply(lambda x: match(x))
 
+
   return edge_df, vertex_df

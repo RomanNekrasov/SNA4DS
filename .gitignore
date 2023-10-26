@@ -127,7 +127,7 @@ venv/
 ENV/
 env.bak/
 venv.bak/
-envsna
+envsna/
 
 # Spyder project settings
 .spyderproject
@@ -160,18 +160,18 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 .idea/
 
+
 # Ignoring the personal constants file
-personalConstants.py
+config/personalConstants.py
 
 # Datafiles
-*.csv
-*.json
-collection17.10.2023/
-scraped-*
+test_data/
+scraped*
 
 #vscode stuf
 .vscode/
 
-# My test notebook
-test.ipynb
-tests.ipynb
+# Notebooks
+
+# MacOS files
+.DS_Store
