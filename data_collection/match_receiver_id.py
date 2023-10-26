@@ -1,3 +1,5 @@
+import pandas as pd
+
 def match_receiver_id(edge_df, vertex_df):
   id_to_displayname = {}
   for row in range(len(vertex_df)):

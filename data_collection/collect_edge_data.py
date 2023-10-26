@@ -1,36 +1,16 @@
 import re
 import numpy as np
+import pandas as pd
 import logging
 import sys
 import os
 import googleapiclient.discovery
-from config import constants as c
+from helpers import enable_api, add_to_frame
 
 # Disable OAuthlib's HTTPS verification when running locally.
 # *DO NOT* leave this option enabled in production.
 os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"  # From the documentation https://developers.google.com/youtube/v3/docs/
-
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)  # to see what the code is doing when running
-
-
-def add_to_frame(frame, an_item):
-    """ Takes the dataframe and appends an item to the rows
-  Keyword arguments:
-  edge_df -- the dataframe
-  an_item -- the item to be appended
-
-  Return:
-  returns the dataframe with the appended item
-  """
-
-    frame.loc[len(frame) + 1] = an_item
-    return frame
-
-
-def enable_api():
-    youtube = googleapiclient.discovery.build(
-        c.API_SERVICE_NAME, c.API_VERSION, developerKey=c.YOUTUBEAPIKEY, cache_discovery=False)
-    return youtube
 
 
 def get_next_page_token(response_data):

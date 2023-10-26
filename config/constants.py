@@ -1,10 +1,12 @@
 import os 
-import personalConstants as pc
+from config import personalConstants as pc
 
-SNADATAROOT = os.path.join(pc.GOOGLEDRIVEROOT, 'SNA4DS', 'Data')
-SBMDATAROOT = os.path.join(pc.GOOGLEDRIVEROOT, 'SBM', 'Data')
+SNADATAROOT = os.path.join(pc.GOOGLE_DRIVE_ROOT, 'SNA4DS', 'Data')
+SBMDATAROOT = os.path.join(pc.GOOGLE_DRIVE_ROOT, 'SBM', 'Data')
 
-YOUTUBEAPIKEY = pc.YOUTUBEAPIKEY
+YOUTUBE_API_KEY = pc.YOUTUBE_API_KEY
+API_SERVICE_NAME = "youtube"
+API_VERSION = "v3"
 
 # Will delete below later, made it as a test to see if the constants.py file works. Check yourself also.
 # make dataframe of google data_first_sample.csv in SBMDATAROOT
