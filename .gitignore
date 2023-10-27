@@ -171,7 +171,5 @@ scraped*
 #vscode stuf
 .vscode/
 
-# Notebooks
-
 # MacOS files
 .DS_Store

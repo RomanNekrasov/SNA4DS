@@ -4,7 +4,7 @@ import logging
 import sys
 
 
-def request_channel_information(ids):
+def request_channel_information(ids: str):
     logging.basicConfig(stream=sys.stdout, level=logging.INFO)  # to see what the code is doing when running
     youtube = enable_api()
     request = youtube.channels().list(
@@ -43,7 +43,6 @@ def collect_vertex_data(frame, ids):
             authorId, authorTitle, customUrl, memberSince, subscriberCount, viewCount, videoCount
   Return: the dataframe with the new information added
   """
-
     for idset in ids:
         response = request_channel_information(ids=idset)
         frame = parse_responses(response, frame)
