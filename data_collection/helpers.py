@@ -4,19 +4,25 @@ import pandas as pd
 
 
 def enable_api():
-    youtube = googleapiclient.discovery.build(
-        c.API_SERVICE_NAME, c.API_VERSION, developerKey=c.YOUTUBE_API_KEY, cache_discovery=False)
+    youtube = googleapiclient.discovery.build(c.API_SERVICE_NAME,
+                                              c.API_VERSION,
+                                              developerKey=c.YOUTUBE_API_KEY,
+                                              cache_discovery=False
+                                              )
+    # The service name is "youtube"
+    # The api version is "v3"
+
     return youtube
 
 
 def add_to_frame(frame, an_item):
     """ Takes the dataframe and appends an item to the rows
     Keyword arguments:
-    edge_df -- the dataframe
-    an_item -- the item to be appended
+    frame -- the dataframe
+    an_item -- the row to append to the df
 
     Return:
-    returns the dataframe with the appended item
+    returns the dataframe with the appended row
     """
 
     frame.loc[len(frame) + 1] = an_item
