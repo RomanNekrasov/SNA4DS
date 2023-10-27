@@ -18,16 +18,20 @@ from helpers import chunks
 # TODO: Check if the regex expression in collect_edge_data.py is correct
 
 
-def main(video_id: str | list, edge_df=pd.DataFrame(columns=['comment_id', 'threath_id', 'time', 'kind', 'author_id',
-                                                'dest_scraped', 'likes', 'num_replies', 'text', 'video_id']),
-         vertex_df=pd.DataFrame(columns=['author_id', 'display_title', 'customer_url', 'member_since',
-                                         'subscriber_count', 'view_count', 'video_count'])):
+def main(video_id: str | list):
+    vertex_df = pd.DataFrame(
+        columns=['author_id', 'display_title', 'customer_url', 'member_since', 'subscriber_count', 'view_count',
+                 'video_count']
+    )
+    edge_df = pd.DataFrame(
+        columns=['comment_id', 'thread_id', 'time', 'kind', 'author_id', 'dest_scraped', 'likes', 'num_replies',
+                 'text', 'video_id']
+    )
 
-    if isinstance(video_id, str):
+    if isinstance(video_id, str):  # When a single video ID is used to call the function, it will be converted to list
         video_id = list(video_id)
 
     for v_id in video_id:
-        # function that fills the edge dataframe
         logging.info(f"...Collecting data from {v_id}...")
         edge_df = collect_comments(edge_df=edge_df, videoId=v_id)
 

@@ -22,11 +22,11 @@ def get_next_page_token(response_data):
     return page_token
 
 
-def get_comments_from_threat(threat_id):
+def get_comments_from_thread(thread_id):
     """This function gets the replies to a top level comment
 
   Keyword arguments:
-  threath_id -- str: that is the id of the top level comment
+  thread_id -- str: that is the id of the top level comment
   Return: all the replies in a list
   """
     youtube = enable_api()
@@ -34,7 +34,7 @@ def get_comments_from_threat(threat_id):
     # sending first request
     request_comments = youtube.comments().list(
         part="snippet",
-        parentId=threat_id,
+        parentId=thread_id,
         maxResults=100
     )
 
@@ -47,7 +47,7 @@ def get_comments_from_threat(threat_id):
     while page_token:  # if there is a next page, getting those replies as well
         request_comments = youtube.comments().list(
             part="snippet",
-            parentId=threat_id,
+            parentId=thread_id,
             pageToken=page_token,
             maxResults=100
         )
@@ -62,25 +62,25 @@ def get_comments_from_threat(threat_id):
     return replies
 
 
-def send_request(videoId, pageToken=None):
+def send_request(video_id, page_token=None):
     """Base function for communicating with the youtube API
      it uses the YouTube commentThreads to get the top level comments
 
   Keyword arguments:
-  pageToken -- the token received from the previous request
+  page_token -- the token received from the previous request
   Return: the response from the API in JSON format
   """
     youtube = enable_api()
-    if not pageToken:
+    if not page_token:
         request = youtube.commentThreads().list(
             part="snippet,replies",
-            videoId=videoId,
+            videoId=video_id,
         )
     else:
         request = youtube.commentThreads().list(
             part="snippet,replies",
-            videoId=videoId,
-            pageToken=pageToken
+            videoId=video_id,
+            pageToken=page_token
         )
     data = request.execute()
     logging.info('Request sent')
@@ -95,8 +95,8 @@ def parse_item_top_comment(an_item):
   Return: returns a tuple with the parsed data see below for the order
   """
     video_id = an_item['snippet']['videoId']
-    threath_id = an_item['id']
-    comment_id = threath_id  # top comment has the same id as the thread
+    thread_id = an_item['id']
+    comment_id = thread_id  # top comment has the same id as the thread
     kind = an_item['kind']  # always 'youtube#commentThread'
     time = an_item['snippet']['topLevelComment']['snippet']['publishedAt']
     author = an_item['snippet']['topLevelComment']['snippet']['authorChannelId']['value']
@@ -104,12 +104,13 @@ def parse_item_top_comment(an_item):
     likes = an_item['snippet']['topLevelComment']['snippet']['likeCount']
     text = an_item['snippet']['topLevelComment']['snippet']['textOriginal']
     dest = np.nan  # top comment has no destination
-    return comment_id, threath_id, time, kind, author, dest, likes, num_replies, text, video_id
+
+    return comment_id, thread_id, time, kind, author, dest, likes, num_replies, text, video_id
 
 
 def parse_reply(a_reply, video_id):
     video_id = video_id
-    threath_id = a_reply['snippet']['parentId']
+    thread_id = a_reply['snippet']['parentId']
     comment_id = a_reply['id']
     kind = a_reply['kind']  # always 'youtube#comment'
     time = a_reply['snippet']['publishedAt']
@@ -123,7 +124,7 @@ def parse_reply(a_reply, video_id):
     else:
         dest = ''
 
-    return comment_id, threath_id, time, kind, author, dest, likes, num_replies, text, video_id
+    return comment_id, thread_id, time, kind, author, dest, likes, num_replies, text, video_id
 
 
 def collect_comments(videoId, edge_df):
@@ -135,7 +136,7 @@ def collect_comments(videoId, edge_df):
   """
 
     # sending initial request
-    response = send_request(videoId=videoId)
+    response = send_request(video_id=videoId)
     while len(edge_df) < 300000:
         # Parsing
         items = response['items']
@@ -147,7 +148,7 @@ def collect_comments(videoId, edge_df):
 
             if x["snippet"]["totalReplyCount"] > 0:
                 threath_id = item[1]
-                replies = get_comments_from_threat(threat_id=threath_id)
+                replies = get_comments_from_thread(threat_id=threath_id)
                 for reply in replies:
                     reply = parse_reply(reply,
                                         video_id)  # had to give it video id because this is not in the reply repsonse
@@ -155,7 +156,7 @@ def collect_comments(videoId, edge_df):
 
         # sending next request
         if 'nextPageToken' in set(response.keys()):
-            response = send_request(videoId=videoId, pageToken=response['nextPageToken'])
+            response = send_request(video_id=videoId, page_token=response['nextPageToken'])
             logging.info('Requesting Next page')
         else:
             logging.info('Returned because: No more pages')
