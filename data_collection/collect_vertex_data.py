@@ -4,12 +4,14 @@ import logging
 import sys
 
 
-def request_channel_information(ids: str):
+def request_author_information(author_ids: str):
+    """ Function that returns the information about a channel that
+    """
     logging.basicConfig(stream=sys.stdout, level=logging.INFO)  # to see what the code is doing when running
     youtube = enable_api()
     request = youtube.channels().list(
         part="snippet,contentDetails,statistics",
-        id=ids,
+        id=author_ids,
         maxResults=50
     )
     response = request.execute()
@@ -39,9 +41,11 @@ def collect_vertex_data(frame, ids):
     """ Integration function for requesting channel information and parsing the response
 
   Keyword arguments:
-  frame -- the dataframe that will be returned it should have 7 columns be in the format:
-            authorId, authorTitle, customUrl, memberSince, subscriberCount, viewCount, videoCount
-  Return: the dataframe with the new information added
+      frame -- the pd.Dataframe that will be returned it should have 7 columns be in the format: 'author_id',
+                'display_title', 'customer_url', 'member_since', 'subscriber_count', 'view_count', 'video_count'
+      author_ids -- the set of different author_ids that are collected in the edge pd.Dataframe
+  Return:
+      the pd.Dataframe with the new information added
   """
     for idset in ids:
         response = request_channel_information(ids=idset)
