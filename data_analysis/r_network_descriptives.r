@@ -1,34 +1,29 @@
 ### Set the working directory to the folder containing your data
-setwd("C:/Users/20193694/Documents/Sem 2/Social Network Analysis/data")
+setwd("/Users/huubvandevoort/Desktop/SNA4DS/SNA4DS/test_data/scraped-15.28 26-10-2023")
 
 ### Load data 
-edge_df <- read.csv("test_data/edge_df.csv")
+edge_df <- read.csv("edge_df.csv")
 head(edge_df)
 
-vertex_df <- read.csv("test_data/vertex_df.csv")
+vertex_df <- read.csv("vertex_df.csv")
 head(vertex_df)
-
 
 ### Replacing empty strings with NA
 edge_df$dest_id <- ifelse(edge_df$dest_id == "", NA, edge_df$dest_id)
 
-
 install.packages("dplyr")
-library(dplyr)
-
 
 ### Adding a column that includes weight, so we can remove duplicate edges 
 edge_df <- edge_df %>%
-  mutate(weight = ifelse(!is.na(dest_id), 1, NA))
+  dplyr::mutate(weight = ifelse(!is.na(dest_id), 1, NA))
 
 edge_list <- edge_df %>% 
-  group_by(edge_df$author_id, edge_df$dest_id) %>%
-  summarize(weight = sum(weight)) %>%
-  ungroup()
+  dplyr::group_by(edge_df$author_id, edge_df$dest_id) %>%
+  dplyr::summarize(weight = sum(weight)) %>%
+  dplyr::ungroup()
 
 edge_list <- as.data.frame(edge_list)
 colnames(edge_list) <- c("sender", "receiver", "weight")
-
 
 ### Removing rows without receiver from the edge list:
 edge_list <- edge_list[complete.cases(edge_list$receiver), ]
