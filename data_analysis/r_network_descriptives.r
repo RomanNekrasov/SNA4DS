@@ -100,59 +100,55 @@ for (video_id in unique_video_ids) {
   
   # Create edge_list for the current video_id
   edge_list <- edge_subset %>%
-    group_by(author_id, dest_id) %>%
-    summarize(weight = sum(weight)) %>%
+    select(sender = author_id, receiver = dest_id, weight) %>%
+    filter(!is.na(receiver)) %>%
+    distinct() %>%
     ungroup()
-  
-  # Rename columns in edge_list
-  colnames(edge_list) <- c("sender", "receiver", "weight")
   
   # Remove rows without receiver from the edge list
   edge_list <- edge_list[complete.cases(edge_list$receiver), ]
   
   # Convert edge_list to igraph
-  edge_i <- snafun::to_igraph(edge_list, vertices = vertex_df)
+  edge_i <- to_igraph(edge_list, vertices = vertex_df)
   
   # Get network statistics
-  info <- snafun::g_summary(edge_i)
+  info <- g_summary(edge_i)
   
   # Get NR of isolates
-  num_isolates <- info$number_of_isolates
+  num_isolates <- length(setdiff(edge_list$sender, edge_list$receiver))
   
-  # Total number of vertices
-  num_vertices <- length(vertex_df$author_id)
-  
-  # Number of connected nodes (excluding isolates)
-  num_connected_nodes <- num_vertices - num_isolates
+  # Number of vertices
+  num_vertices <- length(unique(c(edge_list$sender, edge_list$receiver)))
+  num_commenting_vertices <- length(unique(edge_list$sender))
   
   # Get graph density
-  density <- snafun::g_density(edge_i)
+  density <- g_density(edge_i)
   
   # Print statistics for the current video_id
   cat("Video ID:", video_id, "\n")
   cat("Number of Isolates:", num_isolates, "\n")
+  cat("Total Number of Vertices (including isolates):", num_vertices, "\n")
   cat("Number of Edges:", info$number_of_edges, "\n")
-  cat("Total Number of Nodes:", num_vertices, "\n")
-  cat("Number of Connected Nodes:", num_connected_nodes, "\n")
+  cat("Number of Connected Nodes (excluding isolates):", num_commenting_vertices - num_isolates, "\n")
   cat("Density:", density, "\n\n")
   
   # Store results in the list
   results_list[[as.character(video_id)]] <- list(
     num_isolates = num_isolates,
     num_vertices = num_vertices,
-    num_connected_nodes = num_connected_nodes,
     num_edges = info$number_of_edges,
+    num_connected_nodes = num_commenting_vertices - num_isolates,
     density = density,
     edge_i = edge_i
   )
   
   # Plot the graph without isolates
-  edge_no_isolates <- snafun::remove_isolates(edge_i)
+  edge_no_isolates <- remove_isolates(edge_i)
   plot(
     edge_no_isolates,
     main = paste("YouTube Network - Video ID:", video_id, "(No Isolates)"),
-    vertex.size = 2,
-    edge.arrow.size = 0.2,
+    vertex.size = 3,
+    edge.arrow.size = 0.1,
     edge.width = 0.2,
     vertex.label = NA,
     edge.curved = 0.1
@@ -162,8 +158,8 @@ for (video_id in unique_video_ids) {
   plot(
     edge_i,
     main = paste("YouTube Network - Video ID:", video_id, "(With Isolates)"),
-    vertex.size = 2,
-    edge.arrow.size = 0.2,
+    vertex.size = 3,
+    edge.arrow.size = 0.1,
     edge.width = 0.2,
     vertex.label = NA,
     edge.curved = 0.1
