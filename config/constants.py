@@ -1,8 +1,8 @@
 import os 
 from config import personalConstants as pc
 
-SNADATAROOT = os.path.join(pc.GOOGLE_DRIVE_ROOT, 'SNA4DS', 'Data')
-SBMDATAROOT = os.path.join(pc.GOOGLE_DRIVE_ROOT, 'SBM', 'Data')
+SNA_DATA_ROOT = os.path.join(pc.GOOGLE_DRIVE_ROOT, 'SNA4DS', 'Data')
+SBM_DATA_ROOT = os.path.join(pc.GOOGLE_DRIVE_ROOT, 'SBM', 'Data')
 
 YOUTUBE_API_KEY = pc.YOUTUBE_API_KEY
 API_SERVICE_NAME = "youtube"

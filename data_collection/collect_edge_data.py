@@ -120,7 +120,7 @@ def parse_reply(reply, video_id):
     num_replies = np.nan  # for youtube#comment there are no replies
     text = reply['snippet']['textOriginal']
     if '@' in text:
-        dest = re.findall(r"@(\S+\s*\S*)", text)[0]
+        dest = re.findall(r"@(\S+\s*\S*\s*\S*)", text)[0]
     else:
         dest = ''
 

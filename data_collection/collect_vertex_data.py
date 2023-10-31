@@ -19,19 +19,26 @@ def request_author_information(author_ids: str):
     return response
 
 
-def parse_responses(response, frame):
+def parse_response(response, frame):
+    """ Function that parses the required information from a response and adds it to the resulting dataframe
+    Keywords:
+        response - the response resulting from the request_author_information function
+        frame - the resulting dataframe
+    Return:
+        the filled dataframe
+    """
     logging.info(f"Number of responses: {len(response['items'])}")
 
     # parsing response
     for i in response['items']:
-        authorId = i['id']
-        authorTitle = i['snippet']['title']
-        customUrl = i['snippet']['customUrl']
-        memberSince = i['snippet']['publishedAt']
-        subscriberCount = i['statistics']['subscriberCount']
-        viewCount = i['statistics']['viewCount']
-        videoCount = i['statistics']['videoCount']
-        newline = [authorId, authorTitle, customUrl, memberSince, subscriberCount, viewCount, videoCount]
+        author_id = i['id']
+        author_title = i['snippet']['title']
+        custom_url = i['snippet']['customUrl']
+        member_since = i['snippet']['publishedAt']
+        subscriber_count = i['statistics']['subscriberCount']
+        view_count = i['statistics']['viewCount']
+        video_count = i['statistics']['videoCount']
+        newline = [author_id, author_title, custom_url, member_since, subscriber_count, view_count, video_count]
         # adding to frame
         frame = add_to_frame(frame, newline)
     return frame
@@ -39,7 +46,6 @@ def parse_responses(response, frame):
 
 def collect_vertex_data(frame, ids):
     """ Integration function for requesting channel information and parsing the response
-
   Keyword arguments:
       frame -- the pd.Dataframe that will be returned it should have 7 columns be in the format: 'author_id',
                 'display_title', 'customer_url', 'member_since', 'subscriber_count', 'view_count', 'video_count'
@@ -48,6 +54,6 @@ def collect_vertex_data(frame, ids):
       the pd.Dataframe with the new information added
   """
     for idset in ids:
-        response = request_channel_information(ids=idset)
-        frame = parse_responses(response, frame)
+        response = request_author_information(ids=idset)
+        frame = parse_response(response, frame)
     return frame
