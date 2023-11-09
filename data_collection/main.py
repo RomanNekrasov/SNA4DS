@@ -13,9 +13,8 @@ from match_receiver_id import match_receiver_id
 from helpers import chunks
 
 
-# TODO: add docstrings
-# TODO: check if a the destination of a comment on a comment is is properly registrated
-# TODO: Check if the regex expression in collect_edge_data.py is correct
+# TODO: Scrape for a whole channel, but only the videos from oktober 2022
+# TODO: Add mechanism for storing in which videos the vertices appear
 
 
 def main(video_id: str | list):
@@ -40,7 +39,7 @@ def main(video_id: str | list):
     print(f'Number of unique IDs: {len(all_author_ids)}')
     all_author_ids_comma_sep = chunks(all_author_ids, 50)
 
-    vertex_df = collect_vertex_data(frame=vertex_df, ids=all_author_ids_comma_sep)
+    vertex_df = collect_vertex_data(frame=vertex_df, author_ids=all_author_ids_comma_sep)
 
     # matching the scraped handles of the receivers with the actual author ids
     edge_df, vertex_df = match_receiver_id(edge_df=edge_df, vertex_df=vertex_df)

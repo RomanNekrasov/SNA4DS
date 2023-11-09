@@ -1,0 +1,40 @@
+---
+title: "Echochambers on YouTube"
+author:
+  - Roman Nekrasov
+  - Andy Huang
+  - Oumaima Lemhour
+  - Tom Tuerlings
+  - Huub Van de Voort
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output: html_document
+---
+
+# Introduction
+
+This is where you will introduce the topic of your report, provide some background information, and state the purpose of your analysis.
+
+# Theoretical Background
+
+In this section, you will delve into the theories that support your research. Discuss any relevant literature and how it informs your study.
+
+# Methodology
+
+Describe the methods you used in your social network analysis. Include information about data collection, analysis tools, and any statistical methods you applied.
+
+# Results
+
+Present the findings of your analysis. Use visualizations and charts to illustrate the structure and characteristics of the YouTube echochambers you have investigated.
+
+# Discussion
+
+Discuss the implications of your findings. Compare your results with existing literature, and explain any correlations, patterns, or anomalies you discovered.
+
+# Conclusion
+
+Summarize the main points of your report, the significance of your findings, and the potential for future research in this area.
+
+# References
+
+Include a list of all the sources you have cited in your report.
+

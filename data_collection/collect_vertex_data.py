@@ -1,7 +1,8 @@
-from helpers import enable_api, add_to_frame
+from data_collection.helpers import enable_api, add_to_frame
 import pandas as pd
 import logging
 import sys
+import argparse
 
 
 def request_author_information(author_ids: str):
@@ -10,7 +11,7 @@ def request_author_information(author_ids: str):
     logging.basicConfig(stream=sys.stdout, level=logging.INFO)  # to see what the code is doing when running
     youtube = enable_api()
     request = youtube.channels().list(
-        part="snippet,contentDetails,statistics",
+        part="snippet,statistics",
         id=author_ids,
         maxResults=50
     )
@@ -27,7 +28,7 @@ def parse_response(response, frame):
     Return:
         the filled dataframe
     """
-    logging.info(f"Number of responses: {len(response['items'])}")
+    logging.info(f"Number of responses: {len(response.get('items'))}")
 
     # parsing response
     for i in response['items']:
@@ -44,7 +45,7 @@ def parse_response(response, frame):
     return frame
 
 
-def collect_vertex_data(frame, ids):
+def collect_vertex_data(frame, author_ids):
     """ Integration function for requesting channel information and parsing the response
   Keyword arguments:
       frame -- the pd.Dataframe that will be returned it should have 7 columns be in the format: 'author_id',
@@ -53,7 +54,28 @@ def collect_vertex_data(frame, ids):
   Return:
       the pd.Dataframe with the new information added
   """
-    for idset in ids:
-        response = request_author_information(ids=idset)
+    for idset in author_ids:
+        response = request_author_information(author_ids=idset)
+        print(response)
         frame = parse_response(response, frame)
     return frame
+
+
+def parse_command_line_arguments():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--ids', type=str)
+    args = parser.parse_args()
+    return vars(args)
+
+
+if __name__ == "__main__":
+    # main function call
+    # The video_id is the last part of the youtube url
+    logging.basicConfig(stream=sys.stdout, level=logging.INFO)
+    test_frame = pd.DataFrame(
+        columns=['author_id', 'display_title', 'customer_url', 'member_since', 'subscriber_count', 'view_count',
+                 'video_count']
+    )
+
+    collect_vertex_data(author_ids=[parse_command_line_arguments().get('ids')],
+                        frame=test_frame).to_csv('test_data/test123.csv', index=False)
