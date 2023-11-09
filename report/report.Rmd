@@ -1,0 +1,61 @@
+---
+title: "Echochambers on YouTube"
+shorttitle: "Short Title"
+author:
+  - Roman Nekrasov
+  - Andy Huang
+  - Oumaima Lemhour
+  - Tom Tuerlings
+  - Huub Van de Voort
+affiliation:
+  - id: "1"
+    institution: "Your Institution"
+  - id: "2"
+    institution: "Co-Author's Institution"
+abstract: >
+  This section is your executive summary. It should be around 150 words and summarize the main topic, research questions, hypotheses, results, and main conclusions of your report.
+keywords: "keywords"
+wordcount: "4500"
+figsintext: yes
+figurelist: no
+tablelist: no
+footnotelist: no
+lineno: yes
+draft: yes
+documentclass: "apa7"
+classoption: "man"
+output: papaja::apa6_pdf
+bibliography: [your-bibtex-file.bib]
+---
+
+# Introduction {-}
+
+<!-- Your introduction here (1000 words) -->
+
+# Dataset {-}
+
+<!-- Details about your dataset here (500 words) -->
+
+# Research Rationale {-}
+
+<!-- Your rationale for choosing the methods and how they fit your research questions (500 words) -->
+
+# Study 1: Model Results {-}
+
+<!-- Present and discuss the results of your first study/model (1000 words) -->
+
+# Study 2: ERGM Results {-}
+
+<!-- Present and discuss the results of your second study/ERGM (1000 words) -->
+
+# Conclusion {-}
+
+<!-- Your conclusion here (350 words) -->
+
+# References {-}
+
+<!-- Your references will automatically be formatted in APA style from your .bib file. -->
+
+# Appendix {-}
+
+<!-- Include any supporting material such as data exploration, model explorations, nested model results, goodness of fit, and code used to produce them in the appendix. -->
