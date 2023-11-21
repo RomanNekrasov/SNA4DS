@@ -7,6 +7,7 @@ setwd("~/Desktop/SNA4DS/6. Project/SNA4DS/test_data/scraped-15.28 26-10-2023")
 
 ### Load data
 edges <- read.csv("edge_df.csv", header=TRUE, stringsAsFactors = FALSE)
+vertices <- read.csv("vertex_df.csv", header=TRUE, stringsAsFactors = FALSE)
 
 ### Removing the youtube#commentThreads only keeping the "youtube#comment"s
 edges <- edges[edges$kind != 'youtube#commentThread', ]
@@ -15,25 +16,31 @@ edges <- edges[edges$kind != 'youtube#commentThread', ]
 names(edges)[names(edges)=='author_id'] <- 'sender'
 names(edges)[names(edges)=='dest_id'] <- 'receiver'
 
-### Only keeping the relevant columns
-edges <- edges[, c('sender', 'receiver')]
+###  Rearranging columns to make 'sender' and 'receiver' the first two columns
+###  this is required for the igraph function to create the graph object
+edges <- edges[c("sender", "receiver", setdiff(names(edges), c("sender", "receiver")))]
 
 result <- data.frame()
 
 ### Concat
-edges$senderreceiver <- paste(edges$sender, edges$receiver)
-edges <- edges[!duplicated(edges$senderreceiver), ]  # Removing duplicates
-edges$senderreceiver <- NULL
+# edges$senderreceiver <- paste(edges$sender, edges$receiver)
+# edges <- edges[!duplicated(edges$senderreceiver), ]  # Removing duplicates
+# edges$senderreceiver <- NULL
 
-edges$receiver <- ifelse(edges$receiver == "", NA, edges$receiver)
-edges$receiver <- ifelse(edges$receiver == "nan", NA, edges$receiver)
+### handling NA values
+edges <- edges[edges$sender != 'nan', ]
+edges <- edges[edges$sender != '', ]
+edges <- edges[edges$receiver != 'nan', ]
+edges <- edges[edges$receiver != '', ]
 
 ### Creating graph object
-suppressWarnings({
-graph <- igraph::graph_from_data_frame(edges, directed = TRUE) |>
-  snafun::remove_loops() |>
-  snafun::remove_vertices(vertices = "NA")
-})
+graph <- igraph::graph_from_data_frame(edges, directed = TRUE, vertices = vertices)
+
+# suppressWarnings({
+# graph <- igraph::graph_from_data_frame(edges, directed = TRUE) |>
+#   snafun::remove_loops() |>
+#   snafun::remove_vertices(vertices = "NA")
+# })
 
 plot(
     snafun::remove_isolates(graph),
@@ -47,7 +54,7 @@ plot(
 
 ### Getting descriptives
 result <- data.frame()
-sum <- snafun::g_summary(graph)
+(sum <- snafun::g_summary(snafun::remove_isolates(graph)))
 r <- list(
   number_of_vertices = sum$number_of_vertices,
   number_of_edges = sum$number_of_edges,
@@ -58,5 +65,7 @@ r <- list(
   triad_030t = snafun::count_triads(graph)$"030T"
 )
 result <- rbind(result, r)
+# write.csv(result, "merged_network_descriptives.csv", row.names = FALSE)
 
-write.csv(result, "merged_network_descriptives.csv", row.names = FALSE)
+snafun::list_vertex_attributes(graph)
+snafun::list_edge_attributes(graph)

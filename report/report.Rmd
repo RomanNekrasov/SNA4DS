@@ -25,7 +25,7 @@ draft: yes
 documentclass: "apa7"
 classoption: "man"
 output: papaja::apa6_pdf
-bibliography: [your-bibtex-file.bib]
+bibliography: [bibtex.bib]
 ---
 
 # Introduction {-}
