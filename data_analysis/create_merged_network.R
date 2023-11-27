@@ -35,6 +35,9 @@ edges <- edges[edges$receiver != '', ]
 
 ### Creating graph object
 graph <- igraph::graph_from_data_frame(edges, directed = TRUE, vertices = vertices)
+
+snafun::g_summary(snafun::remove_isolates(graph))
+
 snafun::list_vertex_attributes(graph)
 snafun::list_edge_attributes(graph)
 
