@@ -3,3 +3,4 @@ numpy
 google-api-python-client
 seaborn
 matplotlib
+igraph
