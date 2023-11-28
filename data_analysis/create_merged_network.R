@@ -7,7 +7,7 @@ setwd("~/Desktop/SNA4DS/6. Project/SNA4DS/test_data/scraped-15.28 26-10-2023")
 
 ### Load data
 edges <- read.csv("edge_df.csv", header=TRUE, stringsAsFactors = FALSE)
-vertices <- read.csv("vertex_df_icounts.csv", header=TRUE, stringsAsFactors = FALSE)
+vertices <- read.csv("vertex_df.csv", header=TRUE, stringsAsFactors = FALSE)
 
 ### Removing the youtube#commentThreads only keeping the "youtube#comment"s
 edges <- edges[edges$kind != 'youtube#commentThread', ]
@@ -36,7 +36,36 @@ edges <- edges[edges$receiver != '', ]
 ### Creating graph object
 graph <- igraph::graph_from_data_frame(edges, directed = TRUE, vertices = vertices)
 
-snafun::g_summary(snafun::remove_isolates(graph))
+# suppressWarnings({
+# graph <- igraph::graph_from_data_frame(edges, directed = TRUE) |>
+#   snafun::remove_loops() |>
+#   snafun::remove_vertices(vertices = "NA")
+# })
+
+plot(
+    snafun::remove_isolates(graph),
+    vertex.label=NA,
+    vertex.size = 2,
+    vertex.color = "red",
+    edge.arrow.size = .5,
+    edge.color = "grey",
+    main = "Plot of merged graph"
+  )
+
+### Getting descriptives
+result <- data.frame()
+(sum <- snafun::g_summary(snafun::remove_isolates(graph)))
+r <- list(
+  number_of_vertices = sum$number_of_vertices,
+  number_of_edges = sum$number_of_edges,
+  number_of_isolates = sum$number_of_isolates,
+  number_of_connected_nodes = sum$number_of_vertices - sum$number_of_isolates,
+  density = sum$density,
+  density_without_isolates = snafun::g_summary(snafun::remove_isolates(graph))$density,
+  triad_030t = snafun::count_triads(graph)$"030T"
+)
+result <- rbind(result, r)
+# write.csv(result, "merged_network_descriptives.csv", row.names = FALSE)
 
 snafun::list_vertex_attributes(graph)
 snafun::list_edge_attributes(graph)
@@ -76,3 +105,9 @@ autocorr <- snafun::stat_nam(interactions_send ~ .,
 
 summary(autocorr) # Nope definitly not! However, the interactions received is a significant
 #                   predictor for sending a comment to someone.
+
+
+# export the following data into a csv file:
+data <- snafun::extract_vertex_names(snafun::remove_isolates(graph))
+data <- data.frame(data)
+write.csv(data, "author_ids_non_isolated.csv")
