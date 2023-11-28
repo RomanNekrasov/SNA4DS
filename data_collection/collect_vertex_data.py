@@ -5,11 +5,26 @@ import sys
 import argparse
 
 
-def request_author_information(author_ids: str):
-    """ Function that returns the information about a channel that
+def request_author_information(author_ids=None, video_url=None):
     """
+        Function that returns the information about a channel that
+    """
+
+    if author_ids and video_url:
+        logging.error("only one of the arguments should be given")
+        return None
+
     logging.basicConfig(stream=sys.stdout, level=logging.INFO)  # to see what the code is doing when running
     youtube = enable_api()
+    if video_url:
+        request = youtube.videos().list(
+            part="snippet,contentDetails",
+            id=video_url.split('=')[-1],
+            maxResults=50
+        )
+        response = request.execute()
+        author_ids = response['items'][0]['snippet']['channelId']
+
     request = youtube.channels().list(
         part="snippet,statistics",
         id=author_ids,
@@ -20,13 +35,13 @@ def request_author_information(author_ids: str):
     return response
 
 
-def parse_response(response, frame):
+def parse_author_information_response(response, frame):
     """ Function that parses the required information from a response and adds it to the resulting dataframe
-    Keywords:
-        response - the response resulting from the request_author_information function
-        frame - the resulting dataframe
-    Return:
-        the filled dataframe
+        Keywords:
+            response - the response resulting from the request_author_information function
+            frame - the resulting dataframe
+        Return:
+            the filled dataframe
     """
     logging.info(f"Number of responses: {len(response.get('items'))}")
 
@@ -45,20 +60,28 @@ def parse_response(response, frame):
     return frame
 
 
-def collect_vertex_data(frame, author_ids):
+def collect_vertex_data(frame, author_ids=None, video_url=None):
     """ Integration function for requesting channel information and parsing the response
-  Keyword arguments:
-      frame -- the pd.Dataframe that will be returned it should have 7 columns be in the format: 'author_id',
+        Keyword arguments:
+        frame -- the pd.Dataframe that will be returned it should have 7 columns be in the format: 'author_id',
                 'display_title', 'customer_url', 'member_since', 'subscriber_count', 'view_count', 'video_count'
-      author_ids -- the set of different author_ids that are collected in the edge pd.Dataframe
-  Return:
-      the pd.Dataframe with the new information added
+        author_ids -- the set of different author_ids that are collected in the edge pd.Dataframe
+          Return:
+              the pd.Dataframe with the new information added
   """
-    for idset in author_ids:
-        response = request_author_information(author_ids=idset)
-        print(response)
-        frame = parse_response(response, frame)
-    return frame
+    if author_ids and video_url:
+        logging.error("only one of the arguments should be given")
+        return None
+    elif author_ids:
+        for idset in author_ids:
+            response = request_author_information(author_ids=idset)
+            print(response)
+            frame = parse_author_information_response(response, frame)
+        return frame
+    elif video_url:
+        response = request_author_information(video_url=video_url)
+        frame = parse_author_information_response(response, frame)
+        return frame
 
 
 def parse_command_line_arguments():

@@ -22,13 +22,15 @@ def get_next_page_token(response_data):
     return page_token
 
 
-def get_comments_on_main_thread(thread_id):
-    """This function gets the replies to a top level comment
+def request_replies_on_main_thread(thread_id):
+    """
+    This function requests the replies to a main thread
 
-  Keyword arguments:
-  thread_id -- str: that is the id of the top level comment
-  Return: all the replies in a list
-  """
+    Keyword arguments:
+        thread_id -- str: that is the id of the main thread
+    Return: all the replies in a list
+    """
+
     youtube = enable_api()
 
     # sending first request
@@ -71,23 +73,23 @@ def request_main_comment_thread(video_id, page_token=None):
   Return: the response from the API in JSON format
   """
     youtube = enable_api()
-    if not page_token:
-        request = youtube.commentThreads().list(
-            part="snippet,replies",
-            videoId=video_id,
-        )
-    else:
+    if page_token:
         request = youtube.commentThreads().list(
             part="snippet,replies",
             videoId=video_id,
             pageToken=page_token
         )
-    data = request.execute()
+    else:
+        request = youtube.commentThreads().list(
+            part="snippet,replies",
+            videoId=video_id,
+        )
+    response = request.execute()
     logging.info('Request sent')
-    return data
+    return response
 
 
-def parse_item_top_comment(api_return_item):
+def parse_main_thread_response(api_return_item):
     """Parses the top comment since this is slightly different than a reply to a top comment
 
   Keyword arguments:
@@ -109,7 +111,7 @@ def parse_item_top_comment(api_return_item):
     return thread_id, video_id, comment_id, time, kind, author, dest, likes, num_replies, text
 
 
-def parse_reply(reply, video_id):
+def parse_reply_on_main_thread(reply, video_id):
     thread_id = reply['snippet']['parentId']
     video_id = video_id
     comment_id = reply['id']
@@ -127,7 +129,7 @@ def parse_reply(reply, video_id):
     return thread_id, video_id, comment_id, time, kind, author, dest, likes, num_replies, text
 
 
-def collect_comments(video_id, edge_df):
+def collect_comments_of_video(video_id, edge_df):
     """Integration Function that combines the other functions to collect the comments
 
   Keyword arguments:
@@ -143,16 +145,16 @@ def collect_comments(video_id, edge_df):
         items = response['items']
         for x in items:  # x is a top level comment item
             # top level comment
-            item = parse_item_top_comment(x)
-            video_id = item[9]
+            item = parse_main_thread_response(x)
+            # video_id = item[9]
             edge_df = add_to_frame(edge_df, item)
 
             if x["snippet"]["totalReplyCount"] > 0:  # This gets executed when people replied on the main thread
                 thread_id = item[1]
-                replies = get_comments_on_main_thread(thread_id=thread_id)
+                replies = request_replies_on_main_thread(thread_id=thread_id)
                 for reply in replies:
                     # had to give parse_reply video id as parameter because this is not in the reply response
-                    reply = parse_reply(reply, video_id)
+                    reply = parse_reply_on_main_thread(reply, video_id)
                     edge_df = add_to_frame(edge_df, reply)
 
         if 'nextPageToken' in set(response.keys()):  # sending next request

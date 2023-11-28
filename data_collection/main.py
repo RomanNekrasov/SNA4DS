@@ -7,14 +7,11 @@ import logging
 import argparse
 
 from config import constants as c
-from collect_edge_data import collect_comments
+from collect_edge_data import collect_comments_of_video
 from collect_vertex_data import collect_vertex_data
 from match_receiver_id import match_receiver_id
 from helpers import chunks
-
-
-# TODO: Scrape for a whole channel, but only the videos from oktober 2022
-# TODO: Add mechanism for storing in which videos the vertices appear
+from count_vertex_interactions import count_interactions
 
 
 def main(video_id: str | list):
@@ -32,7 +29,7 @@ def main(video_id: str | list):
 
     for v_id in video_id:
         logging.info(f"...Collecting data from {v_id}...")
-        edge_df = collect_comments(edge_df=edge_df, video_id=v_id)
+        edge_df = collect_comments_of_video(edge_df=edge_df, video_id=v_id)
 
     # getting unique author ids from the edge df
     all_author_ids = list(edge_df['author_id'].unique())
@@ -43,6 +40,8 @@ def main(video_id: str | list):
 
     # matching the scraped handles of the receivers with the actual author ids
     edge_df, vertex_df = match_receiver_id(edge_df=edge_df, vertex_df=vertex_df)
+
+    vertex_df = count_interactions(edge_df, vertex_df)
 
     new_dir = f'test_data/scraped-{datetime.datetime.now().strftime("%H.%M %d-%m-%Y")}'
     os.mkdir(new_dir)
