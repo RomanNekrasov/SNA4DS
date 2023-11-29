@@ -1,0 +1,69 @@
+---
+title: "Snowball sampling and statistics"
+output: html_notebook
+---
+
+```{r}
+g <- igraph::read_graph(file = '/Users/huubvandevoort/Desktop/SNA4DS/6. Project/SNA4DS/data_preparation/prepared_data/network.graphml',
+                   format = 'graphml')
+```
+
+```{r}
+# checking the degrees
+# chunk does not have implications for rest of the notebook
+in_degrees <- igraph::degree(g,
+                             mode = 'in')
+to_remove <- igraph::V(g)[in_degrees[in_degrees < 2]]
+snafun::remove_vertices(g, vertices = to_remove)
+```
+
+```{r}
+components <- igraph::components(g)
+largest_component <- which.max(components$csize)
+subgraph <- igraph::induced_subgraph(g, 
+                                     vids = which(components$membership == largest_component))
+```
+
+```{r}
+source('snowball_sampling_function.R')
+# sample1 <- snowball.sampling(g, samn = 100)
+```
+
+```{r}
+depths <- c(25, 50, 100, 150, 200)
+snowballs <- c()
+
+for (d in depths) {
+  tmp_sample <- snowball.sampling(subgraph, 
+                                  samn = d, 
+                                  adjacent_mode = 'all' # created new function parameter
+                                  # because code will crash for other modes because
+                                  # we have ego network
+                                  )
+  snowballs = c(tmp_sample, snowballs)
+}
+```
+
+```{r}
+result_frame <- matrix(ncol = 18, nrow = 0)
+# names(result_frame) <- c("nodes", "edges", "triads", "density")
+
+for (s in snowballs) {
+  if (class(s) == 'igraph') {
+    nodes <- snafun::count_vertices(s)
+    edges <- snafun::count_edges(s)
+    triads <- snafun::count_triads(s) |> as.list() |> t()
+    row <- cbind(nodes, edges, triads)
+    result_frame <- rbind(result_frame, row)
+  }
+}
+```
+
+```{r}
+mat_df <- as.data.frame(result_frame)
+colnames(mat_df) <- c("nodes", "edges", "003", "012", "102", "021D", "021U", "021C", "111D", "111U", "030T", "030C", "201", "120D", "120U", "120C", "210", "300")
+
+library(knitr)
+library(kableExtra)
+kable(mat_df)
+```
