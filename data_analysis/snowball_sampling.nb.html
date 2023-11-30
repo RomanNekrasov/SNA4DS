@@ -1754,8 +1754,8 @@ display: none;
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZyA8LSBpZ3JhcGg6OnJlYWRfZ3JhcGgoZmlsZSA9ICcuL2RhdGFfcHJlcGFyYXRpb24vcHJlcGFyZWRfZGF0YS9uZXR3b3JrLmdyYXBobWwnLFxuICAgICAgICAgICAgICAgICAgIGZvcm1hdCA9ICdncmFwaG1sJylcblxuYGBgIn0= -->
-<pre class="r"><code>g &lt;- igraph::read_graph(file = &#39;./data_preparation/prepared_data/network.graphml&#39;,
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZyA8LSBpZ3JhcGg6OnJlYWRfZ3JhcGgoZmlsZSA9ICdcIkM6XFxcXFVzZXJzXFxcXHJuZWtyYXNvXFxcXFNOQTREU1xcXFxkYXRhX3ByZXBhcmF0aW9uXFxcXHByZXBhcmVkX2RhdGFcXFxcbmV0d29yay5ncmFwaG1sXCIsIGZvcm1hdCA9IFwiZ3JhcGhtbFwiJyxcbiAgICAgICAgICAgICAgICAgICBmb3JtYXQgPSAnZ3JhcGhtbCcpXG5cbmBgYCJ9 -->
+<pre class="r"><code>g &lt;- igraph::read_graph(file = &#39;&quot;C:\\Users\\rnekraso\\SNA4DS\\data_preparation\\prepared_data\\network.graphml&quot;, format = &quot;graphml&quot;&#39;,
                    format = &#39;graphml&#39;)
 </code></pre>
 <!-- rnb-source-end -->
@@ -1767,459 +1767,83 @@ display: none;
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc25hZnVuOjpyZW1vdmVfdmVydGljZXMoZywgXG4gICAgICAgICAgICAgICAgICAgICAgICB2ZXJ0aWNlcyA9IHRvX3JlbW92ZSlcblxuYGBgIn0= -->
-<pre class="r"><code>snafun::remove_vertices(g, 
-                        vertices = to_remove)
-</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyBjaGVja2luZyB0aGUgZGVncmVlc1xuIyBjaHVuayBkb2VzIG5vdCBoYXZlIGltcGxpY2F0aW9ucyBmb3IgcmVzdCBvZiB0aGUgbm90ZWJvb2tcbmluX2RlZ3JlZXMgPC0gaWdyYXBoOjpkZWdyZWUoZyxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgbW9kZSA9ICdpbicpXG50b19yZW1vdmUgPC0gaWdyYXBoOjpWKGcpW2luX2RlZ3JlZXNbaW5fZGVncmVlcyA8IDJdXVxuc25hZnVuOjpyZW1vdmVfdmVydGljZXMoZywgdmVydGljZXMgPSB0b19yZW1vdmUpXG5gYGAifQ== -->
+<pre class="r"><code># checking the degrees
+# chunk does not have implications for rest of the notebook
+in_degrees &lt;- igraph::degree(g,
+                             mode = &#39;in&#39;)
+to_remove &lt;- igraph::V(g)[in_degrees[in_degrees &lt; 2]]
+snafun::remove_vertices(g, vertices = to_remove)</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiSUdSQVBIIDc5NjI3NGIgRC0tLSAzMjMgNTUxIC0tIFxuKyBhdHRyOiBpZCAodi9uKSwgc3Vic2NyaWJlcl9jb3VudCAodi9uKSwgdmlld19jb3VudCAodi9uKSwgdmlkZW9fY291bnQgKHYvbiksIGNvbW1lbnRfY291bnQgKHYvbiksXG58IGF2ZXJhZ2VfbGVuZ3RoX2NvbW1lbnRzICh2L24pLCBzZW50aW1lbnQgKHYvYyksIGNvbW1lbnRfbGVuZ3RoX2NhdGVnb3J5ICh2L2MpLCB0b3RhbF9saWtlcyAodi9uKSxcbnwgZWRnZV93ZWlnaHQgKGUvbilcbisgZWRnZXMgZnJvbSA3OTYyNzRiOlxuIFsxXSAgMTgtPiAgOSAgIDgtPiAgOSAgMTEtPiAxMCAgIDktPiAxMCAgMTQtPiAxMCAgIDgtPiAxMCAgMTctPiAxMCAgIDEtPiAxMCAgMjUtPiAxMCAgMTAtPiAxNCAgMjktPiAxMCAgMTAtPiAyNyAgMTctPiAyNFxuWzE0XSAgMTAtPiAxNyAgMjEtPiAxMCAgMTctPjE0NSAgMjItPiAyOCAgMTktPiAyNiAgMzItPjIyMSAgMzMtPiAyNCAgNDAtPiAxMCAgNDItPiAxNyAgMjItPiAxNyAgMTAtPjIyMSAgMjItPiAxMCAgMzctPiAxMFxuWzI3XSAgMzktPiAzMSAgMzktPiAyNCAgMzEtPiAyNCAgIDItPiAyNCAgMjQtPiAxMCAgMzYtPiAxMCAgIDgtPiAzNiAgNTItPjIyMSAgMjItPiA1MiAgNTEtPiAxMCAgMTAtPiA1MSAgMjItPiA1MSAgNDctPiAxN1xuWzQwXSAgMTctPiA0NyAgIDgtPiA0NyAgNDctPiAgOCAgNTQtPiAxMCAgNTQtPiAgOCAgIDgtPiA1NCAgNTMtPiAxMCAgNTUtPiA0MyAgMTctPiA2MiAgMTAtPiA2MiAgNDYtPiAxMCAgNjAtPiAxMCAgNjEtPiAyNFxuWzUzXSAgNTctPiAxNyAgMTctPiAxMiAgNjMtPiAxMCAgNTYtPiAxMCAgNDgtPiAxMCAgMTAtPiAyNCAgNTgtPiAyNCAgODgtPiA4MiAgODItPiA4OCAgMTYtPiA4MiAgODAtPiA4MiAgODMtPiA3MSAgNjktPiA0M1xuWzY2XSAgNzItPiA3MSAgOTEtPiA3MSAgIDgtPiA3MSAgODktPiA5NyAgOTYtPiA5NyAgOTctPiA5NiAgOTAtPiA3MSAgOTAtPiA0MyAgNDMtPiA5MCAxMDMtPiA3MSAgODktPjExMyAgODktPjEzNyAgNDktPjEzN1xuKyAuLi4gb21pdHRlZCBzZXZlcmFsIGVkZ2VzXG4ifQ== -->
-<pre><code>IGRAPH 796274b D--- 323 551 -- 
-+ attr: id (v/n), subscriber_count (v/n), view_count (v/n), video_count (v/n), comment_count (v/n),
-| average_length_comments (v/n), sentiment (v/c), comment_length_category (v/c), total_likes (v/n),
-| edge_weight (e/n)
-+ edges from 796274b:
- [1]  18-&gt;  9   8-&gt;  9  11-&gt; 10   9-&gt; 10  14-&gt; 10   8-&gt; 10  17-&gt; 10   1-&gt; 10  25-&gt; 10  10-&gt; 14  29-&gt; 10  10-&gt; 27  17-&gt; 24
-[14]  10-&gt; 17  21-&gt; 10  17-&gt;145  22-&gt; 28  19-&gt; 26  32-&gt;221  33-&gt; 24  40-&gt; 10  42-&gt; 17  22-&gt; 17  10-&gt;221  22-&gt; 10  37-&gt; 10
-[27]  39-&gt; 31  39-&gt; 24  31-&gt; 24   2-&gt; 24  24-&gt; 10  36-&gt; 10   8-&gt; 36  52-&gt;221  22-&gt; 52  51-&gt; 10  10-&gt; 51  22-&gt; 51  47-&gt; 17
-[40]  17-&gt; 47   8-&gt; 47  47-&gt;  8  54-&gt; 10  54-&gt;  8   8-&gt; 54  53-&gt; 10  55-&gt; 43  17-&gt; 62  10-&gt; 62  46-&gt; 10  60-&gt; 10  61-&gt; 24
-[53]  57-&gt; 17  17-&gt; 12  63-&gt; 10  56-&gt; 10  48-&gt; 10  10-&gt; 24  58-&gt; 24  88-&gt; 82  82-&gt; 88  16-&gt; 82  80-&gt; 82  83-&gt; 71  69-&gt; 43
-[66]  72-&gt; 71  91-&gt; 71   8-&gt; 71  89-&gt; 97  96-&gt; 97  97-&gt; 96  90-&gt; 71  90-&gt; 43  43-&gt; 90 103-&gt; 71  89-&gt;113  89-&gt;137  49-&gt;137
-+ ... omitted several edges</code></pre>
-<!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc3ViZ3JhcGggPC0gaWdyYXBoOjppbmR1Y2VkX3N1YmdyYXBoKHVuaXF1ZV9ncmFwaCwgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdmlkcyA9IHdoaWNoKGNvbXBvbmVudHMkbWVtYmVyc2hpcCA9PSBsYXJnZXN0X2NvbXBvbmVudCkpXG5cbmBgYCJ9 -->
-<pre class="r"><code>subgraph &lt;- igraph::induced_subgraph(unique_graph, 
-                                     vids = which(components$membership == largest_component))
-</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuY29tcG9uZW50cyA8LSBpZ3JhcGg6OmNvbXBvbmVudHMoZylcbmxhcmdlc3RfY29tcG9uZW50IDwtIHdoaWNoLm1heChjb21wb25lbnRzJGNzaXplKVxuc3ViZ3JhcGggPC0gaWdyYXBoOjppbmR1Y2VkX3N1YmdyYXBoKGcsIFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHZpZHMgPSB3aGljaChjb21wb25lbnRzJG1lbWJlcnNoaXAgPT0gbGFyZ2VzdF9jb21wb25lbnQpKVxuYGBgIn0= -->
+<pre class="r"><code>components &lt;- igraph::components(g)
+largest_component &lt;- which.max(components$csize)
+subgraph &lt;- igraph::induced_subgraph(g, 
+                                     vids = which(components$membership == largest_component))</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiRXJyb3I6IG9iamVjdCAndW5pcXVlX2dyYXBoJyBub3QgZm91bmRcbiJ9 -->
-<pre><code>Error: object &#39;unique_graph&#39; not found</code></pre>
-<!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc291cmNlKCdzbm93YmFsbF9zYW1wbGluZ19mdW5jdGlvbi5SJylcblxuYGBgIn0= -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc291cmNlKCdzbm93YmFsbF9zYW1wbGluZ19mdW5jdGlvbi5SJylcbiMgc2FtcGxlMSA8LSBzbm93YmFsbC5zYW1wbGluZyhnLCBzYW1uID0gMTAwKVxuYGBgIn0= -->
 <pre class="r"><code>source(&#39;snowball_sampling_function.R&#39;)
-</code></pre>
+# sample1 &lt;- snowball.sampling(g, samn = 100)</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiRXJyb3I6IHVuZXhwZWN0ZWQgc3RyaW5nIGNvbnN0YW50IGluOlxuXCJyZXN1bHRfZnJhbWVcbnNvdXJjZSgnXCJcbiJ9 -->
-<pre><code>Error: unexpected string constant in:
-&quot;result_frame
-source(&#39;&quot;</code></pre>
-<!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZm9yIChkIGluIGRlcHRocykge1xuICB0bXBfc2FtcGxlIDwtIHNub3diYWxsLnNhbXBsaW5nKHN1YmdyYXBoLCBzYW1uID0gZCwgYWRqYWNlbnRfbW9kZSA9ICdpbicpXG4gIHNub3diYWxscyA9IGModG1wX3NhbXBsZSwgc25vd2JhbGxzKVxufVxuXG5gYGAifQ== -->
-<pre class="r"><code>for (d in depths) {
-  tmp_sample &lt;- snowball.sampling(subgraph, samn = d, adjacent_mode = &#39;in&#39;)
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZGVwdGhzIDwtIGMoMjUsIDUwLCAxMDAsIDE1MCwgMjAwKVxuc25vd2JhbGxzIDwtIGMoKVxuXG5mb3IgKGQgaW4gZGVwdGhzKSB7XG4gIHRtcF9zYW1wbGUgPC0gc25vd2JhbGwuc2FtcGxpbmcoc3ViZ3JhcGgsIFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHNhbW4gPSBkLCBcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBhZGphY2VudF9tb2RlID0gJ2FsbCcgIyBjcmVhdGVkIG5ldyBmdW5jdGlvbiBwYXJhbWV0ZXJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAjIGJlY2F1c2UgY29kZSB3aWxsIGNyYXNoIGZvciBvdGhlciBtb2RlcyBiZWNhdXNlXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIyB3ZSBoYXZlIGVnbyBuZXR3b3JrXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgKVxuICBzbm93YmFsbHMgPSBjKHRtcF9zYW1wbGUsIHNub3diYWxscylcbn1cbmBgYCJ9 -->
+<pre class="r"><code>depths &lt;- c(25, 50, 100, 150, 200)
+snowballs &lt;- c()
+
+for (d in depths) {
+  tmp_sample &lt;- snowball.sampling(subgraph, 
+                                  samn = d, 
+                                  adjacent_mode = &#39;all&#39; # created new function parameter
+                                  # because code will crash for other modes because
+                                  # we have ego network
+                                  )
   snowballs = c(tmp_sample, snowballs)
-}
-</code></pre>
+}</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiRXJyb3IgaW4gYXNfaWdyYXBoX3ZzKGdyYXBoLCB2KSA6IEludmFsaWQgdmVydGV4IG5hbWUocylcbiJ9 -->
-<pre><code>Error in as_igraph_vs(graph, v) : Invalid vertex name(s)</code></pre>
-<!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-frame-begin eyJtZXRhZGF0YSI6eyJjbGFzc2VzIjpbImRhdGEuZnJhbWUiXSwibnJvdyI6MSwibmNvbCI6MTYsInN1bW1hcnkiOnsiRGVzY3JpcHRpb24iOlsiZGYgWzEgw5cgMTZdIl19fSwicmRmIjoiSDRzSUFBQUFBQUFBQTEyU1AwK0VNQmlIWHc1UWoraUZ4TlhSd1FYU1FqUTZlVVowY0RTSDNpaHlxRVJzTDhERlMxeGMvQXArSGYwb3prNk9UcWZsVDZFdENlRjUzcnh2Mng5d0dVeDlhMm9CZ0E2R3JvRnVNZ1F6bkp3N2h3REdnSWtHQmd5cjU1STFiVE93MlQycUNpZis1alUwViszajc0TXZ5VC9PUVBLM1g5bmZRZmJsamV3dlk5bnBwK3dYcjVJZi95anJYU20rcS9pZTRodUs3OGplbWZ4aVRCSTlKUVUwTDhadWl6cENmb2ZZNDRnUlJ3TjVPQkE0RlBpVU04WjlEK08reDBjVGdYbS83aUhjdFhzb0VEZ1V1Ry9IaUtPUGtCSnJtTk5ubDBmYmF2TnJhdlk0aXdxZW5SZXRXVlJHN2wzT1pwbXRsSkYxT2k5VFN0alFvUHFiVEdWWXk1V0N2U0RWS1daTy9MQWdqODdSZnJXRDhEbUVvM1ZzTjNzTy90cTF6SGF0dFlUY3B5VGhoOCtpMnlSclpjVGkxbW5kZVo2U2trZGgxY0l0YVJueFBpdW1HYS9VNFdEMUQwWk8zckZGQXdBQSJ9 -->
-<div data-pagedtable="false">
-<script data-pagedtable-source type="application/json">
-{"columns":[{"label":["003"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["012"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["102"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["021D"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["021U"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["021C"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["111D"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["111U"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["030T"],"name":[9],"type":["dbl"],"align":["right"]},{"label":["030C"],"name":[10],"type":["dbl"],"align":["right"]},{"label":["201"],"name":[11],"type":["dbl"],"align":["right"]},{"label":["120D"],"name":[12],"type":["dbl"],"align":["right"]},{"label":["120U"],"name":[13],"type":["dbl"],"align":["right"]},{"label":["120C"],"name":[14],"type":["dbl"],"align":["right"]},{"label":["210"],"name":[15],"type":["dbl"],"align":["right"]},{"label":["300"],"name":[16],"type":["dbl"],"align":["right"]}],"data":[{"1":"1248343","2":"53687","3":"8005","4":"703","5":"1408","6":"390","7":"436","8":"254","9":"53","10":"1","11":"88","12":"10","13":"12","14":"3","15":"7","16":"0"}],"options":{"columns":{"min":{},"max":[10],"total":[16]},"rows":{"min":[10],"max":[10],"total":[1]},"pages":{}}}
-  </script>
-</div>
-<!-- rnb-frame-end -->
-<!-- rnb-frame-begin eyJtZXRhZGF0YSI6eyJjbGFzc2VzIjpbImRhdGEuZnJhbWUiXSwibnJvdyI6MSwibmNvbCI6MTYsInN1bW1hcnkiOnsiRGVzY3JpcHRpb24iOlsiZGYgWzEgw5cgMTZdIl19fSwicmRmIjoiSDRzSUFBQUFBQUFBQTEyU3pVNkVNQlNGTHdPb1ErS0V4TTNzZE9IQ0RhU0ZtT2hLak1SRWw1TWhtVzFsMENGaW1RQ2o3bjBDZlJWZndDZHg3ZEluR0MwL2hiWWtoUE5kenIzdEtjekNoVzh0TEFEUXdkQTEwRTBtd1l6bTE4NFpnREZpb0lFQjQvcjV5a3dIVE5qc250U0Z5OE9iSDJpdmhvUHY2WmZFbis4ZzhkdEs1ZzliNWlxUStSbkpuQjNKZkFzU1gvektITXlVZWNmSyt4T0Y5eFNleXR5VGZEQW1KVTlKQ2UzQjJGMVJSOGp2SmZhNHhJaExBM2s0RkhRazZDdXVNUjQ4VEE4ZUg4MEZ6ZjI2aDNCdjkxQW82RWpRZ3gwakxuMkVsRmpqSW45eGViVDlMcittWm84elV2THN2R2d0U1VYYys0TDFNdG9xTGJ2NXVrcHp5cHBHOWQ5a0tzMWFvUlRzRGExM3NYVGkxWVkrT3VlbjlRckM1eEMyMW11N1hYUDAxODB5dTFrN0NYMUlhY0kzbjVHN0pPdGd3dUkyYWQxMWtkS0tSMkhWMHEzeWluQ2ZGZWNacnpUaFlQc1BuMDh5RTBVREFBQT0ifQ== -->
-<div data-pagedtable="false">
-<script data-pagedtable-source type="application/json">
-{"columns":[{"label":["003"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["012"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["102"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["021D"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["021U"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["021C"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["111D"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["111U"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["030T"],"name":[9],"type":["dbl"],"align":["right"]},{"label":["030C"],"name":[10],"type":["dbl"],"align":["right"]},{"label":["201"],"name":[11],"type":["dbl"],"align":["right"]},{"label":["120D"],"name":[12],"type":["dbl"],"align":["right"]},{"label":["120U"],"name":[13],"type":["dbl"],"align":["right"]},{"label":["120C"],"name":[14],"type":["dbl"],"align":["right"]},{"label":["210"],"name":[15],"type":["dbl"],"align":["right"]},{"label":["300"],"name":[16],"type":["dbl"],"align":["right"]}],"data":[{"1":"512634","2":"30819","3":"5009","4":"621","5":"1156","6":"324","7":"355","8":"225","9":"52","10":"1","11":"73","12":"10","13":"12","14":"3","15":"6","16":"0"}],"options":{"columns":{"min":{},"max":[10],"total":[16]},"rows":{"min":[10],"max":[10],"total":[1]},"pages":{}}}
-  </script>
-</div>
-<!-- rnb-frame-end -->
-<!-- rnb-frame-begin eyJtZXRhZGF0YSI6eyJjbGFzc2VzIjpbImRhdGEuZnJhbWUiXSwibnJvdyI6MSwibmNvbCI6MTYsInN1bW1hcnkiOnsiRGVzY3JpcHRpb24iOlsiZGYgWzEgw5cgMTZdIl19fSwicmRmIjoiSDRzSUFBQUFBQUFBQTEyU3pVNkVNQlNGTDMvcWtEZ2g4UVdNS3plUUZtS2lLOGRJNWdFbVF6SXJNNVhCa1lobEFreDBaY2FGVCtMR2QzSGpvL2dFbytXbjBKYUVjTDdiYzl1ZTBsbTRDT3lGRFFBR21JWUdoc1VrV05GODZsNENtRG9ERFV3WTFkOVhaanBod21IdnVDN2NhTzg3YUorR0o5OTNJUEhudWN4dlB6Si9mTW04Qm9XWE1pOG5NazkzRWwvL0t2MHp4WCttako4cURBb2Z5VHdNU3dkalVmS2NsTkFlak5NVkRZU0NYbUtmUzR5NE5KR1BRMEZIZ3I3bEd1UEJ3L1RnQ2RCYzBOeHYrQWozZGgrRmdvNEVQZGd4NGpKQVNJazFLdklYajBjNzd2SnJhdlk0SXlYUHpvdjJpbFRFZXloWUw2TzkwbktZYjZvMHA2eEpyMitUcFRScmhWSnd0clRleGNxTkg3ZjB5YjI2cUZjUWZvZXd0VjQ3N1pyNlh6ZVgxYzExa05CMVNoTysrWXpjSjFrSFl4YTNTZXR0aXBSV1BBcXJsbDZWVjRUNzdEalBlS1VKQi90L2NlektSMFVEQUFBPSJ9 -->
-<div data-pagedtable="false">
-<script data-pagedtable-source type="application/json">
-{"columns":[{"label":["003"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["012"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["102"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["021D"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["021U"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["021C"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["111D"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["111U"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["030T"],"name":[9],"type":["dbl"],"align":["right"]},{"label":["030C"],"name":[10],"type":["dbl"],"align":["right"]},{"label":["201"],"name":[11],"type":["dbl"],"align":["right"]},{"label":["120D"],"name":[12],"type":["dbl"],"align":["right"]},{"label":["120U"],"name":[13],"type":["dbl"],"align":["right"]},{"label":["120C"],"name":[14],"type":["dbl"],"align":["right"]},{"label":["210"],"name":[15],"type":["dbl"],"align":["right"]},{"label":["300"],"name":[16],"type":["dbl"],"align":["right"]}],"data":[{"1":"143408","2":"14012","3":"2452","4":"493","5":"693","6":"184","7":"187","8":"130","9":"45","10":"1","11":"73","12":"9","13":"8","14":"2","15":"3","16":"0"}],"options":{"columns":{"min":{},"max":[10],"total":[16]},"rows":{"min":[10],"max":[10],"total":[1]},"pages":{}}}
-  </script>
-</div>
-<!-- rnb-frame-end -->
-<!-- rnb-frame-begin eyJtZXRhZGF0YSI6eyJjbGFzc2VzIjpbImRhdGEuZnJhbWUiXSwibnJvdyI6MSwibmNvbCI6MTYsInN1bW1hcnkiOnsiRGVzY3JpcHRpb24iOlsiZGYgWzEgw5cgMTZdIl19fSwicmRmIjoiSDRzSUFBQUFBQUFBQTRXUzBVNkRNQlNHRHdQVWtiaVFlT3NqQ0draEp2TktFb2tYdTF4R3NuaFhBUjBSeXdKTXZkU244VzE4bGozQnRJd1cydDVJUXZpL3czL2E4eGVXOFRwMDFnNEFtR0NaQnBnMmsyQW5xM3R2RG1CTkdCaGd3YlI3ZmpEVEJSTXV1MmRkSWZyNUFuNzEvTDFRK1cydjh1WlQ1VXpqaDBqbFdIdS8xSGdPQ3QvdVZZNnVOSFkxdnZ5bi8wemxnZFNEc1NsNXpSdm9EOGJsUlJPaGNKQTRFQklqSVMwVTRGalNpYVR2aE1aNDlEQTlla0swa3JUd213SENnejFBc2FRVFNZOTJqSVFNRWRKaVRldnEzUmZSem5sK1E4K2VscVFSMlVYUnlVaEwvS2VhOVRJNmFDMm4xYll0S3NxYUp0M2ZaR3ZOUnEwVjNCM3Rwc2k4ZExPakw5N05kYmVEOURtazBRYnQ5bnRPZnZsYU5sL3JKS2ZQQmMzRjhDVjV6RXNPTXhiM21OYmYxZ1Z0UlJSV2JmeTJhb253T1dsVmlzb3hIQnorQUdSZ3hZRkZBd0FBIn0= -->
-<div data-pagedtable="false">
-<script data-pagedtable-source type="application/json">
-{"columns":[{"label":["003"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["012"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["102"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["021D"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["021U"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["021C"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["111D"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["111U"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["030T"],"name":[9],"type":["dbl"],"align":["right"]},{"label":["030C"],"name":[10],"type":["dbl"],"align":["right"]},{"label":["201"],"name":[11],"type":["dbl"],"align":["right"]},{"label":["120D"],"name":[12],"type":["dbl"],"align":["right"]},{"label":["120U"],"name":[13],"type":["dbl"],"align":["right"]},{"label":["120C"],"name":[14],"type":["dbl"],"align":["right"]},{"label":["210"],"name":[15],"type":["dbl"],"align":["right"]},{"label":["300"],"name":[16],"type":["dbl"],"align":["right"]}],"data":[{"1":"15618","2":"2981","3":"367","4":"196","5":"164","6":"105","7":"41","8":"74","9":"24","10":"1","11":"14","12":"4","13":"7","14":"1","15":"3","16":"0"}],"options":{"columns":{"min":{},"max":[10],"total":[16]},"rows":{"min":[10],"max":[10],"total":[1]},"pages":{}}}
-  </script>
-</div>
-<!-- rnb-frame-end -->
-<!-- rnb-frame-begin eyJtZXRhZGF0YSI6eyJjbGFzc2VzIjpbImRhdGEuZnJhbWUiXSwibnJvdyI6MSwibmNvbCI6MTYsInN1bW1hcnkiOnsiRGVzY3JpcHRpb24iOlsiZGYgWzEgw5cgMTZdIl19fSwicmRmIjoiSDRzSUFBQUFBQUFBQTMyUzMwcUVRQlRHai8rS0ZWcUV1dWdaQW1WR0tiYXJscEllSU5iWTIwbXRKQnNYZGRtZXBhZnBrWHFDclhHZDBmRkFDZUwzTzM1bjVueWpEL0U2Y3RjdUFGaGdXd1pZanBEZ0pLdDdmd0ZnbXdJTXNHSFdQVCtFNlZRSVQ5enpyckQ4ekVCZVBlKytwdnlJZUFsVHZrVzhRSHlCK0FyeCtaUUIwUHV6S2Q5OC84KzQvMitlSEl6RDJYdmVRSDh3bml4YWhFU0RwS0dTbENocGs1REdtazQwZmFjMHBhTkg2TkVUa1pXbWxkOEtDUjNzSVlrMW5XaDZ0Rk9pWkVRSWlqV3JxMTJnb3AzSS9BYk9ucGFzVWRsVjBjMVl5NExuV3ZRSzJxT1c0MnJURmhVWFRXYjNOem1vMmFoUndkdnlib3JNVDErMy9NMi92dXgyMEQ2SE50cWd2WDVQODBldTVjaTFqbkwrVXZCY0RWK3lwN3lVTUJkeEQybURUVjN3VmtVUjFTWm9xNVlwbjV0V3Bhb2N3c0grRnkrK1d2WkZBd0FBIn0= -->
-<div data-pagedtable="false">
-<script data-pagedtable-source type="application/json">
-{"columns":[{"label":["003"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["012"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["102"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["021D"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["021U"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["021C"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["111D"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["111U"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["030T"],"name":[9],"type":["dbl"],"align":["right"]},{"label":["030C"],"name":[10],"type":["dbl"],"align":["right"]},{"label":["201"],"name":[11],"type":["dbl"],"align":["right"]},{"label":["120D"],"name":[12],"type":["dbl"],"align":["right"]},{"label":["120U"],"name":[13],"type":["dbl"],"align":["right"]},{"label":["120C"],"name":[14],"type":["dbl"],"align":["right"]},{"label":["210"],"name":[15],"type":["dbl"],"align":["right"]},{"label":["300"],"name":[16],"type":["dbl"],"align":["right"]}],"data":[{"1":"1689","2":"380","3":"91","4":"32","5":"36","6":"24","7":"13","8":"22","9":"6","10":"0","11":"5","12":"1","13":"1","14":"0","15":"0","16":"0"}],"options":{"columns":{"min":{},"max":[10],"total":[16]},"rows":{"min":[10],"max":[10],"total":[1]},"pages":{}}}
-  </script>
-</div>
-<!-- rnb-frame-end -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucmVzdWx0X2ZyYW1lIDwtIG1hdHJpeChuY29sID0gMTgsIG5yb3cgPSAwKVxuIyBuYW1lcyhyZXN1bHRfZnJhbWUpIDwtIGMoXCJub2Rlc1wiLCBcImVkZ2VzXCIsIFwidHJpYWRzXCIsIFwiZGVuc2l0eVwiKVxuXG5mb3IgKHMgaW4gc25vd2JhbGxzKSB7XG4gIGlmIChjbGFzcyhzKSA9PSAnaWdyYXBoJykge1xuICAgIG5vZGVzIDwtIHNuYWZ1bjo6Y291bnRfdmVydGljZXMocylcbiAgICBlZGdlcyA8LSBzbmFmdW46OmNvdW50X2VkZ2VzKHMpXG4gICAgdHJpYWRzIDwtIHNuYWZ1bjo6Y291bnRfdHJpYWRzKHMpIHw+IGFzLmxpc3QoKSB8PiB0KClcbiAgICByb3cgPC0gY2JpbmQobm9kZXMsIGVkZ2VzLCB0cmlhZHMpXG4gICAgcmVzdWx0X2ZyYW1lIDwtIHJiaW5kKHJlc3VsdF9mcmFtZSwgcm93KVxuICB9XG59XG5gYGAifQ== -->
+<pre class="r"><code>result_frame &lt;- matrix(ncol = 18, nrow = 0)
+# names(result_frame) &lt;- c(&quot;nodes&quot;, &quot;edges&quot;, &quot;triads&quot;, &quot;density&quot;)
+
+for (s in snowballs) {
+  if (class(s) == &#39;igraph&#39;) {
+    nodes &lt;- snafun::count_vertices(s)
+    edges &lt;- snafun::count_edges(s)
+    triads &lt;- snafun::count_triads(s) |&gt; as.list() |&gt; t()
+    row &lt;- cbind(nodes, edges, triads)
+    result_frame &lt;- rbind(result_frame, row)
+  }
+}</code></pre>
+<!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubWF0X2RmIDwtIGFzLmRhdGEuZnJhbWUocmVzdWx0X2ZyYW1lKVxuY29sbmFtZXMobWF0X2RmKSA8LSBjKFwibm9kZXNcIiwgXCJlZGdlc1wiLCBcIjAwM1wiLCBcIjAxMlwiLCBcIjEwMlwiLCBcIjAyMURcIiwgXCIwMjFVXCIsIFwiMDIxQ1wiLCBcIjExMURcIiwgXCIxMTFVXCIsIFwiMDMwVFwiLCBcIjAzMENcIiwgXCIyMDFcIiwgXCIxMjBEXCIsIFwiMTIwVVwiLCBcIjEyMENcIiwgXCIyMTBcIiwgXCIzMDBcIilcblxubGlicmFyeShrbml0cilcbmxpYnJhcnkoa2FibGVFeHRyYSlcbmthYmxlKG1hdF9kZilcbmBgYCJ9 -->
+<pre class="r"><code>mat_df &lt;- as.data.frame(result_frame)
+colnames(mat_df) &lt;- c(&quot;nodes&quot;, &quot;edges&quot;, &quot;003&quot;, &quot;012&quot;, &quot;102&quot;, &quot;021D&quot;, &quot;021U&quot;, &quot;021C&quot;, &quot;111D&quot;, &quot;111U&quot;, &quot;030T&quot;, &quot;030C&quot;, &quot;201&quot;, &quot;120D&quot;, &quot;120U&quot;, &quot;120C&quot;, &quot;210&quot;, &quot;300&quot;)
 
-<!-- rnb-html-begin eyJtZXRhZGF0YSI6eyJjbGFzc2VzIjpbImtuaXRfYXNpcyJdLCJzaXppbmdQb2xpY3kiOltdfX0= -->
-
-<table>
-<thead>
-<tr>
-<th style="text-align:left;">
-nodes
-</th>
-<th style="text-align:left;">
-edges
-</th>
-<th style="text-align:left;">
-003
-</th>
-<th style="text-align:left;">
-012
-</th>
-<th style="text-align:left;">
-102
-</th>
-<th style="text-align:left;">
-021D
-</th>
-<th style="text-align:left;">
-021U
-</th>
-<th style="text-align:left;">
-021C
-</th>
-<th style="text-align:left;">
-111D
-</th>
-<th style="text-align:left;">
-111U
-</th>
-<th style="text-align:left;">
-030T
-</th>
-<th style="text-align:left;">
-030C
-</th>
-<th style="text-align:left;">
-201
-</th>
-<th style="text-align:left;">
-120D
-</th>
-<th style="text-align:left;">
-120U
-</th>
-<th style="text-align:left;">
-120C
-</th>
-<th style="text-align:left;">
-210
-</th>
-<th style="text-align:left;">
-300
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-200
-</td>
-<td style="text-align:left;">
-391
-</td>
-<td style="text-align:left;">
-1248343
-</td>
-<td style="text-align:left;">
-53687
-</td>
-<td style="text-align:left;">
-8005
-</td>
-<td style="text-align:left;">
-703
-</td>
-<td style="text-align:left;">
-1408
-</td>
-<td style="text-align:left;">
-390
-</td>
-<td style="text-align:left;">
-436
-</td>
-<td style="text-align:left;">
-254
-</td>
-<td style="text-align:left;">
-53
-</td>
-<td style="text-align:left;">
-1
-</td>
-<td style="text-align:left;">
-88
-</td>
-<td style="text-align:left;">
-10
-</td>
-<td style="text-align:left;">
-12
-</td>
-<td style="text-align:left;">
-3
-</td>
-<td style="text-align:left;">
-7
-</td>
-<td style="text-align:left;">
-0
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-150
-</td>
-<td style="text-align:left;">
-320
-</td>
-<td style="text-align:left;">
-512634
-</td>
-<td style="text-align:left;">
-30819
-</td>
-<td style="text-align:left;">
-5009
-</td>
-<td style="text-align:left;">
-621
-</td>
-<td style="text-align:left;">
-1156
-</td>
-<td style="text-align:left;">
-324
-</td>
-<td style="text-align:left;">
-355
-</td>
-<td style="text-align:left;">
-225
-</td>
-<td style="text-align:left;">
-52
-</td>
-<td style="text-align:left;">
-1
-</td>
-<td style="text-align:left;">
-73
-</td>
-<td style="text-align:left;">
-10
-</td>
-<td style="text-align:left;">
-12
-</td>
-<td style="text-align:left;">
-3
-</td>
-<td style="text-align:left;">
-6
-</td>
-<td style="text-align:left;">
-0
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-100
-</td>
-<td style="text-align:left;">
-236
-</td>
-<td style="text-align:left;">
-143408
-</td>
-<td style="text-align:left;">
-14012
-</td>
-<td style="text-align:left;">
-2452
-</td>
-<td style="text-align:left;">
-493
-</td>
-<td style="text-align:left;">
-693
-</td>
-<td style="text-align:left;">
-184
-</td>
-<td style="text-align:left;">
-187
-</td>
-<td style="text-align:left;">
-130
-</td>
-<td style="text-align:left;">
-45
-</td>
-<td style="text-align:left;">
-1
-</td>
-<td style="text-align:left;">
-73
-</td>
-<td style="text-align:left;">
-9
-</td>
-<td style="text-align:left;">
-8
-</td>
-<td style="text-align:left;">
-2
-</td>
-<td style="text-align:left;">
-3
-</td>
-<td style="text-align:left;">
-0
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-50
-</td>
-<td style="text-align:left;">
-108
-</td>
-<td style="text-align:left;">
-15618
-</td>
-<td style="text-align:left;">
-2981
-</td>
-<td style="text-align:left;">
-367
-</td>
-<td style="text-align:left;">
-196
-</td>
-<td style="text-align:left;">
-164
-</td>
-<td style="text-align:left;">
-105
-</td>
-<td style="text-align:left;">
-41
-</td>
-<td style="text-align:left;">
-74
-</td>
-<td style="text-align:left;">
-24
-</td>
-<td style="text-align:left;">
-1
-</td>
-<td style="text-align:left;">
-14
-</td>
-<td style="text-align:left;">
-4
-</td>
-<td style="text-align:left;">
-7
-</td>
-<td style="text-align:left;">
-1
-</td>
-<td style="text-align:left;">
-3
-</td>
-<td style="text-align:left;">
-0
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-25
-</td>
-<td style="text-align:left;">
-39
-</td>
-<td style="text-align:left;">
-1689
-</td>
-<td style="text-align:left;">
-380
-</td>
-<td style="text-align:left;">
-91
-</td>
-<td style="text-align:left;">
-32
-</td>
-<td style="text-align:left;">
-36
-</td>
-<td style="text-align:left;">
-24
-</td>
-<td style="text-align:left;">
-13
-</td>
-<td style="text-align:left;">
-22
-</td>
-<td style="text-align:left;">
-6
-</td>
-<td style="text-align:left;">
-0
-</td>
-<td style="text-align:left;">
-5
-</td>
-<td style="text-align:left;">
-1
-</td>
-<td style="text-align:left;">
-1
-</td>
-<td style="text-align:left;">
-0
-</td>
-<td style="text-align:left;">
-0
-</td>
-<td style="text-align:left;">
-0
-</td>
-</tr>
-</tbody>
-</table>
-
-
-<!-- rnb-html-end -->
-
+library(knitr)
+library(kableExtra)
+kable(mat_df)</code></pre>
+<!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 
-<div id="rmd-source-code">LS0tCnRpdGxlOiAiU25vd2JhbGwgc2FtcGxpbmcgYW5kIHN0YXRpc3RpY3MiCm91dHB1dDogaHRtbF9ub3RlYm9vawotLS0KCmBgYHtyfQpnIDwtIGlncmFwaDo6cmVhZF9ncmFwaChmaWxlID0gJy9Vc2Vycy9odXVidmFuZGV2b29ydC9EZXNrdG9wL1NOQTREUy82LiBQcm9qZWN0L1NOQTREUy9kYXRhX3ByZXBhcmF0aW9uL3ByZXBhcmVkX2RhdGEvbmV0d29yay5ncmFwaG1sJywKICAgICAgICAgICAgICAgICAgIGZvcm1hdCA9ICdncmFwaG1sJykKYGBgCgpgYGB7cn0KIyBjaGVja2luZyB0aGUgZGVncmVlcwojIGNodW5rIGRvZXMgbm90IGhhdmUgaW1wbGljYXRpb25zIGZvciByZXN0IG9mIHRoZSBub3RlYm9vawppbl9kZWdyZWVzIDwtIGlncmFwaDo6ZGVncmVlKGcsCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgbW9kZSA9ICdpbicpCnRvX3JlbW92ZSA8LSBpZ3JhcGg6OlYoZylbaW5fZGVncmVlc1tpbl9kZWdyZWVzIDwgMl1dCnNuYWZ1bjo6cmVtb3ZlX3ZlcnRpY2VzKGcsIHZlcnRpY2VzID0gdG9fcmVtb3ZlKQpgYGAKCmBgYHtyfQpjb21wb25lbnRzIDwtIGlncmFwaDo6Y29tcG9uZW50cyhnKQpsYXJnZXN0X2NvbXBvbmVudCA8LSB3aGljaC5tYXgoY29tcG9uZW50cyRjc2l6ZSkKc3ViZ3JhcGggPC0gaWdyYXBoOjppbmR1Y2VkX3N1YmdyYXBoKGcsIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdmlkcyA9IHdoaWNoKGNvbXBvbmVudHMkbWVtYmVyc2hpcCA9PSBsYXJnZXN0X2NvbXBvbmVudCkpCmBgYAoKYGBge3J9CnNvdXJjZSgnc25vd2JhbGxfc2FtcGxpbmdfZnVuY3Rpb24uUicpCiMgc2FtcGxlMSA8LSBzbm93YmFsbC5zYW1wbGluZyhnLCBzYW1uID0gMTAwKQpgYGAKCmBgYHtyfQpkZXB0aHMgPC0gYygyNSwgNTAsIDEwMCwgMTUwLCAyMDApCnNub3diYWxscyA8LSBjKCkKCmZvciAoZCBpbiBkZXB0aHMpIHsKICB0bXBfc2FtcGxlIDwtIHNub3diYWxsLnNhbXBsaW5nKHN1YmdyYXBoLCAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHNhbW4gPSBkLCAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGFkamFjZW50X21vZGUgPSAnYWxsJyAjIGNyZWF0ZWQgbmV3IGZ1bmN0aW9uIHBhcmFtZXRlcgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIyBiZWNhdXNlIGNvZGUgd2lsbCBjcmFzaCBmb3Igb3RoZXIgbW9kZXMgYmVjYXVzZQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIyB3ZSBoYXZlIGVnbyBuZXR3b3JrCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICApCiAgc25vd2JhbGxzID0gYyh0bXBfc2FtcGxlLCBzbm93YmFsbHMpCn0KYGBgCgpgYGB7cn0KcmVzdWx0X2ZyYW1lIDwtIG1hdHJpeChuY29sID0gMTgsIG5yb3cgPSAwKQojIG5hbWVzKHJlc3VsdF9mcmFtZSkgPC0gYygibm9kZXMiLCAiZWRnZXMiLCAidHJpYWRzIiwgImRlbnNpdHkiKQoKZm9yIChzIGluIHNub3diYWxscykgewogIGlmIChjbGFzcyhzKSA9PSAnaWdyYXBoJykgewogICAgbm9kZXMgPC0gc25hZnVuOjpjb3VudF92ZXJ0aWNlcyhzKQogICAgZWRnZXMgPC0gc25hZnVuOjpjb3VudF9lZGdlcyhzKQogICAgdHJpYWRzIDwtIHNuYWZ1bjo6Y291bnRfdHJpYWRzKHMpIHw+IGFzLmxpc3QoKSB8PiB0KCkKICAgIHJvdyA8LSBjYmluZChub2RlcywgZWRnZXMsIHRyaWFkcykKICAgIHJlc3VsdF9mcmFtZSA8LSByYmluZChyZXN1bHRfZnJhbWUsIHJvdykKICB9Cn0KYGBgCgpgYGB7cn0KbWF0X2RmIDwtIGFzLmRhdGEuZnJhbWUocmVzdWx0X2ZyYW1lKQpjb2xuYW1lcyhtYXRfZGYpIDwtIGMoIm5vZGVzIiwgImVkZ2VzIiwgIjAwMyIsICIwMTIiLCAiMTAyIiwgIjAyMUQiLCAiMDIxVSIsICIwMjFDIiwgIjExMUQiLCAiMTExVSIsICIwMzBUIiwgIjAzMEMiLCAiMjAxIiwgIjEyMEQiLCAiMTIwVSIsICIxMjBDIiwgIjIxMCIsICIzMDAiKQoKbGlicmFyeShrbml0cikKbGlicmFyeShrYWJsZUV4dHJhKQprYWJsZShtYXRfZGYpCmBgYAo=</div>
+<div id="rmd-source-code">LS0tDQp0aXRsZTogIlNub3diYWxsIHNhbXBsaW5nIGFuZCBzdGF0aXN0aWNzIg0Kb3V0cHV0OiBodG1sX25vdGVib29rDQotLS0NCg0KYGBge3J9DQpnIDwtIGlncmFwaDo6cmVhZF9ncmFwaChmaWxlID0gJyJDOlxcVXNlcnNcXHJuZWtyYXNvXFxTTkE0RFNcXGRhdGFfcHJlcGFyYXRpb25cXHByZXBhcmVkX2RhdGFcXG5ldHdvcmsuZ3JhcGhtbCIsIGZvcm1hdCA9ICJncmFwaG1sIicsDQogICAgICAgICAgICAgICAgICAgZm9ybWF0ID0gJ2dyYXBobWwnKQ0KYGBgDQoNCmBgYHtyfQ0KIyBjaGVja2luZyB0aGUgZGVncmVlcw0KIyBjaHVuayBkb2VzIG5vdCBoYXZlIGltcGxpY2F0aW9ucyBmb3IgcmVzdCBvZiB0aGUgbm90ZWJvb2sNCmluX2RlZ3JlZXMgPC0gaWdyYXBoOjpkZWdyZWUoZywNCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgbW9kZSA9ICdpbicpDQp0b19yZW1vdmUgPC0gaWdyYXBoOjpWKGcpW2luX2RlZ3JlZXNbaW5fZGVncmVlcyA8IDJdXQ0Kc25hZnVuOjpyZW1vdmVfdmVydGljZXMoZywgdmVydGljZXMgPSB0b19yZW1vdmUpDQpgYGANCg0KYGBge3J9DQpjb21wb25lbnRzIDwtIGlncmFwaDo6Y29tcG9uZW50cyhnKQ0KbGFyZ2VzdF9jb21wb25lbnQgPC0gd2hpY2gubWF4KGNvbXBvbmVudHMkY3NpemUpDQpzdWJncmFwaCA8LSBpZ3JhcGg6OmluZHVjZWRfc3ViZ3JhcGgoZywgDQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdmlkcyA9IHdoaWNoKGNvbXBvbmVudHMkbWVtYmVyc2hpcCA9PSBsYXJnZXN0X2NvbXBvbmVudCkpDQpgYGANCg0KYGBge3J9DQpzb3VyY2UoJ3Nub3diYWxsX3NhbXBsaW5nX2Z1bmN0aW9uLlInKQ0KIyBzYW1wbGUxIDwtIHNub3diYWxsLnNhbXBsaW5nKGcsIHNhbW4gPSAxMDApDQpgYGANCg0KYGBge3J9DQpkZXB0aHMgPC0gYygyNSwgNTAsIDEwMCwgMTUwLCAyMDApDQpzbm93YmFsbHMgPC0gYygpDQoNCmZvciAoZCBpbiBkZXB0aHMpIHsNCiAgdG1wX3NhbXBsZSA8LSBzbm93YmFsbC5zYW1wbGluZyhzdWJncmFwaCwgDQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgc2FtbiA9IGQsIA0KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGFkamFjZW50X21vZGUgPSAnYWxsJyAjIGNyZWF0ZWQgbmV3IGZ1bmN0aW9uIHBhcmFtZXRlcg0KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICMgYmVjYXVzZSBjb2RlIHdpbGwgY3Jhc2ggZm9yIG90aGVyIG1vZGVzIGJlY2F1c2UNCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAjIHdlIGhhdmUgZWdvIG5ldHdvcmsNCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICApDQogIHNub3diYWxscyA9IGModG1wX3NhbXBsZSwgc25vd2JhbGxzKQ0KfQ0KYGBgDQoNCmBgYHtyfQ0KcmVzdWx0X2ZyYW1lIDwtIG1hdHJpeChuY29sID0gMTgsIG5yb3cgPSAwKQ0KIyBuYW1lcyhyZXN1bHRfZnJhbWUpIDwtIGMoIm5vZGVzIiwgImVkZ2VzIiwgInRyaWFkcyIsICJkZW5zaXR5IikNCg0KZm9yIChzIGluIHNub3diYWxscykgew0KICBpZiAoY2xhc3MocykgPT0gJ2lncmFwaCcpIHsNCiAgICBub2RlcyA8LSBzbmFmdW46OmNvdW50X3ZlcnRpY2VzKHMpDQogICAgZWRnZXMgPC0gc25hZnVuOjpjb3VudF9lZGdlcyhzKQ0KICAgIHRyaWFkcyA8LSBzbmFmdW46OmNvdW50X3RyaWFkcyhzKSB8PiBhcy5saXN0KCkgfD4gdCgpDQogICAgcm93IDwtIGNiaW5kKG5vZGVzLCBlZGdlcywgdHJpYWRzKQ0KICAgIHJlc3VsdF9mcmFtZSA8LSByYmluZChyZXN1bHRfZnJhbWUsIHJvdykNCiAgfQ0KfQ0KYGBgDQoNCmBgYHtyfQ0KbWF0X2RmIDwtIGFzLmRhdGEuZnJhbWUocmVzdWx0X2ZyYW1lKQ0KY29sbmFtZXMobWF0X2RmKSA8LSBjKCJub2RlcyIsICJlZGdlcyIsICIwMDMiLCAiMDEyIiwgIjEwMiIsICIwMjFEIiwgIjAyMVUiLCAiMDIxQyIsICIxMTFEIiwgIjExMVUiLCAiMDMwVCIsICIwMzBDIiwgIjIwMSIsICIxMjBEIiwgIjEyMFUiLCAiMTIwQyIsICIyMTAiLCAiMzAwIikNCg0KbGlicmFyeShrbml0cikNCmxpYnJhcnkoa2FibGVFeHRyYSkNCmthYmxlKG1hdF9kZikNCmBgYA0K</div>
 
 
 

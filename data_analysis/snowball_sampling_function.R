@@ -15,18 +15,19 @@ snowball.sampling = function(G, samn, adjacent_mode = 'out') {
   }
   
   ind = c()
-  V(G)$name = c(1:length(V(G)))
-  starter = sample(1:length(V(G)), 1)
+  V(G)$name = c(1:vcount(G))  # Assign names from 1 to number of vertices
+  starter = sample(V(G)$name, 1)  # Sample from vertex names
   current = c()
-  current[1] = V(G)$name[starter]
+  current[1] = starter  # Use the name directly
   count = 1
   ind[1] = current[1]
   
   # Continue sampling until the sample number is reached
   while (count < samn) {
-    nnode = length(current) # Number of subjects in the current stage
+    nnode = length(current)  # Number of subjects in the current stage
     for (i in 1:nnode) {
-      ngh = neighbors(G, current[i], mode = adjacent_mode) # Vertex index
+      # Fetch neighbors by vertex name, not index
+      ngh = neighbors(G, current[i], mode = adjacent_mode) 
       ind = c(ind, V(G)$name[ngh])
       ind = unique(ind)
     }
@@ -34,7 +35,7 @@ snowball.sampling = function(G, samn, adjacent_mode = 'out') {
     
     # Adjust if the sampled size exceeds the target
     if (samn < length(ind)) {
-      need = samn - count # Number of subjects needed
+      need = samn - count  # Number of subjects needed
       tmp_sample = sample(tmp_sample, need)
       ind[(count + 1):samn] = tmp_sample
       ind = ind[-c((samn + 1):length(ind))]
@@ -45,7 +46,8 @@ snowball.sampling = function(G, samn, adjacent_mode = 'out') {
   
   # Return the subgraph and indices if successful
   if (count == samn) {
-    subG = induced.subgraph(G, ind)
+    # Create the subgraph using vertex names
+    subG = induced.subgraph(G, which(V(G)$name %in% ind))
     return(list(subG = subG, ind = ind))
   } else {
     return("Something goes wrong.")

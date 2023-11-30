@@ -4,7 +4,7 @@ output: html_notebook
 ---
 
 ```{r}
-g <- igraph::read_graph(file = '/Users/huubvandevoort/Desktop/SNA4DS/6. Project/SNA4DS/data_preparation/prepared_data/network.graphml',
+g <- igraph::read_graph(file = '"C:\\Users\\rnekraso\\SNA4DS\\data_preparation\\prepared_data\\network.graphml", format = "graphml"',
                    format = 'graphml')
 ```
 
