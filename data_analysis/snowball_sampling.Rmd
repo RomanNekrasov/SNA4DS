@@ -15,8 +15,8 @@ subgraph <- igraph::induced_subgraph(g,
 ```
 
 ```{r}
-make_snowballs <- function(G, sizes, order, mode = "all") {
-  egos <- igraph::make_ego_graph(subgraph, order = 3)
+make_snowballs <- function(G, sizes, nodes, order, mode = "all") {
+  egos <- igraph::make_ego_graph(subgraph, order = 4)
   graphs <- c()
   
   for (i in 1:length(sizes)) {
@@ -34,11 +34,19 @@ make_snowballs <- function(G, sizes, order, mode = "all") {
   return(graphs)
 }
 
-snowballs <- (make_snowballs(subgraph, order = 3, sizes = c(25, 50, 100, 150, 200), mode = "all"))
+nodes <- igraph::
+snowballs <- (make_snowballs(subgraph, order = 3, sizes = c(25, 50, 100, 150, 200), 
+                             nodes = mode = "all"))
 ```
 
 ```{r}
-snowballs[1]
+temp <- snowballs[1]
+
+components <- igraph::components(temp)
+
+for (s in snowballs) {
+  print(igraph::count_components(s))
+}
 ```
 
 ```{r}
