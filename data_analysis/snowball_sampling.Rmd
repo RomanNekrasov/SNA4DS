@@ -6,6 +6,7 @@ output: html_notebook
 ```{r}
 g <- igraph::read_graph(file = '/Users/huubvandevoort/Desktop/SNA4DS/6. Project/SNA4DS/data_preparation/prepared_data/network.graphml',
                    format = 'graphml')
+g
 ```
 
 ```{r}
@@ -32,14 +33,20 @@ source('snowball_sampling_function.R')
 ```{r}
 depths <- c(25, 50, 100, 150, 200)
 snowballs <- c()
+setwd("snowballs")
 
-for (d in depths) {
-  tmp_sample <- snowball.sampling(subgraph, 
-                                  samn = d, 
+for (i in 1:length(depths)) {
+  tmp_sample <- snowball.sampling(subgraph,
+                                  samn = depths[i], 
                                   adjacent_mode = 'all' # created new function parameter
                                   # because code will crash for other modes because
                                   # we have ego network
                                   )
+  filename = paste("snowball", toString(i), ".graphml", sep = "")
+  igraph::write_graph(graph = tmp_sample$subG,
+                      file = filename,
+                      format = "graphml")
+  
   snowballs = c(tmp_sample, snowballs)
 }
 ```
