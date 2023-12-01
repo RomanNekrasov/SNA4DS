@@ -6,19 +6,8 @@ output: html_notebook
 ```{r}
 g <- igraph::read_graph(file = '/Users/huubvandevoort/Desktop/SNA4DS/6. Project/SNA4DS/data_preparation/prepared_data/network.graphml',
                    format = 'graphml')
-g
-```
 
-```{r}
-# checking the degrees
-# chunk does not have implications for rest of the notebook
-in_degrees <- igraph::degree(g,
-                             mode = 'in')
-to_remove <- igraph::V(g)[in_degrees[in_degrees < 2]]
-snafun::remove_vertices(g, vertices = to_remove)
-```
-
-```{r}
+# only taking biggest component
 components <- igraph::components(g)
 largest_component <- which.max(components$csize)
 subgraph <- igraph::induced_subgraph(g, 
@@ -26,29 +15,30 @@ subgraph <- igraph::induced_subgraph(g,
 ```
 
 ```{r}
-source('snowball_sampling_function.R')
-# sample1 <- snowball.sampling(g, samn = 100)
+make_snowballs <- function(G, sizes, order, mode = "all") {
+  egos <- igraph::make_ego_graph(subgraph, order = 3)
+  graphs <- c()
+  
+  for (i in 1:length(sizes)) {
+    for (ego in egos) {
+      graph_size <- igraph::vcount(ego)
+      if (graph_size >= sizes[i]) {
+        graphs[[i]] <- ego
+        file <- paste("snowball_size_", graph_size, ".graphml", sep="")
+        fp <- file.path("snowballs", file)
+        igraph::write_graph(graph = ego, file = fp, format = "graphml")
+        break
+      }
+    }
+  }
+  return(graphs)
+}
+
+snowballs <- (make_snowballs(subgraph, order = 3, sizes = c(25, 50, 100, 150, 200), mode = "all"))
 ```
 
 ```{r}
-depths <- c(25, 50, 100, 150, 200)
-snowballs <- c()
-setwd("snowballs")
-
-for (i in 1:length(depths)) {
-  tmp_sample <- snowball.sampling(subgraph,
-                                  samn = depths[i], 
-                                  adjacent_mode = 'all' # created new function parameter
-                                  # because code will crash for other modes because
-                                  # we have ego network
-                                  )
-  filename = paste("snowball", toString(i), ".graphml", sep = "")
-  igraph::write_graph(graph = tmp_sample$subG,
-                      file = filename,
-                      format = "graphml")
-  
-  snowballs = c(tmp_sample, snowballs)
-}
+snowballs[1]
 ```
 
 ```{r}
@@ -56,21 +46,14 @@ result_frame <- matrix(ncol = 18, nrow = 0)
 # names(result_frame) <- c("nodes", "edges", "triads", "density")
 
 for (s in snowballs) {
-  if (class(s) == 'igraph') {
-    nodes <- snafun::count_vertices(s)
-    edges <- snafun::count_edges(s)
-    triads <- snafun::count_triads(s) |> as.list() |> t()
-    row <- cbind(nodes, edges, triads)
-    result_frame <- rbind(result_frame, row)
-  }
+  nodes <- snafun::count_vertices(s)
+  edges <- snafun::count_edges(s)
+  triads <- snafun::count_triads(s) |> as.list() |> t()
+  row <- cbind(nodes, edges, triads)
+  result_frame <- rbind(result_frame, row)
 }
-```
 
-```{r}
-mat_df <- as.data.frame(result_frame)
-colnames(mat_df) <- c("nodes", "edges", "003", "012", "102", "021D", "021U", "021C", "111D", "111U", "030T", "030C", "201", "120D", "120U", "120C", "210", "300")
+result_frame
 
-library(knitr)
-library(kableExtra)
-kable(mat_df)
+
 ```
