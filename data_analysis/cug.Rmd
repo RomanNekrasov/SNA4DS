@@ -54,9 +54,16 @@ graph <- snafun::remove_isolates(graph)
 #   snafun::remove_vertices(vertices = "NA")
 # })
 
+##p this is how you read from a path roman
+
+fp_graph = file.path(".","data_preparation", "prepared_data", "network.graphml")
+fp_snowballs = file.path(".", "data_preparation", "prepared_data", "snowballs")
+
 graph1 <- igraph::read.graph("C:\\Users\\rnekraso\\SNA4DS\\data_analysis\\snowballs\\snowball1.graphml", format = "graphml")
 
 graph <- igraph::read_graph(file = "C:\\Users\\rnekraso\\SNA4DS\\data_preparation\\prepared_data\\network.graphml", format = 'graphml')
+
+
 
 graph1
 ```
