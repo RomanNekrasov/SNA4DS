@@ -37,14 +37,15 @@ igraph::V(graph)$eccentricity <- igraph::eccentricity(graph,
                                                       mode = 'all')
 
 
+png(file="plots/network_plot.png", width = 1000, height = 1000)
 plot(
   graph,
   vertex.label = NA,
-  edge.arrow.size = .1,
+  edge.arrow.size = .25,
   vertex.size = 3,
   vertex.color = igraph::V(graph)$color
 )
 
-
 graphics::legend(x = 0.75, y = -.85, c("Negative","Positive", "Neutral"), pch = 21,
                  col = "#777777", pt.bg = colrs, pt.cex = 2.5, cex = 1.2, bty = "o", ncol = 1)
+dev.off()
