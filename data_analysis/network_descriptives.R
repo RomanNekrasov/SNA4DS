@@ -4,7 +4,7 @@
 
 # HOW 2 USE
 # Set your working directory to the folder containing the scraped data.
-setwd("~/Desktop/SNA4DS/6. Project/SNA4DS/test_data/scraped-15.28 26-10-2023")
+setwd("/Users/huubvandevoort/Desktop/SNA4DS/6.Project/SNA4DS/test_data/scraped-15.28 26-10-2023")
 
 ### Load data
 edges <- read.csv("edge_df.csv", header=TRUE, stringsAsFactors = FALSE)

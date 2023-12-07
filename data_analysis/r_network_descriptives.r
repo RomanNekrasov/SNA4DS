@@ -1,6 +1,6 @@
 ### Set the working directory to the folder containing your data
 # setwd("C:/Users/20193694/Documents/Sem 2/Social Network Analysis/data")
-setwd("/Users/huubvandevoort/Desktop/SNA4DS/SNA4DS/test_data/scraped-15.28 26-10-2023")
+setwd("/Users/huubvandevoort/Desktop/SNA4DS/6.Project/SNA4DS/test_data/scraped-15.28 26-10-2023")
 
 ### Load data 
 edge_df <- read.csv("edge_df.csv")

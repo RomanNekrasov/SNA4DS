@@ -1,29 +1,21 @@
 ---
+# Link to Claudia's Assignment Description: https://tilburguniversity.instructure.com/courses/13565/pages/research-project-40-percent-of-your-grade
 title: "Unveiling Echo Chambers on YouTube: Analyzing Political Discourse and Social Dynamics Through Advanced Quantitative Methods"
+shorttitle: "YouTube Echo Chambers"
 author:
 - name: "Roman Nekrasov"
-  affiliation: '1'
-#  equal_contrib: yes
 - name: "Huub van de Voort"
-  affiliation: '1'
-#  equal_contrib: yes
 - name: "Andy Huang"
-  affiliation: '1'
-# equal_contrib: yes
 - name: "Oumaima Lemhour"
-  affiliation: '1'
 - name: "Tom Teurlings"
-  affiliation: '1'
-shorttitle: "YouTube Echo Chambers"
-output:
-  papaja::apa6_pdf: default
-  word_document: default
-  pdf_document: default
-abstract: |
-  This is your abstract text where you summarize the contents of your paper.
-keywords: "echo chambers, YouTube, network analysis"
-#wordcount: X
-bibliography: "r-references.bib"
+affiliation:
+  - id: ""
+    institution: "Jheronimus Academy of Data Science"
+wordcount: 0
+  
+bibliography: ["r-references.bib"]
+
+#Rendering options 
 toc: no
 toc_float: no
 floatsintext: no
@@ -33,16 +25,21 @@ footnotelist: no
 linenumbers: no
 mask: no
 draft: no
-documentclass: apa6
-classoption: man
-affiliation:
-- id: '1'
-  institution: "Jheronimus Academy of Data Science"
+numbersections: yes
+
+documentclass: "apa6"
+classoption: "man"
+output:
+  papaja::apa6_pdf:
+    keep_tex: FALSE
+  word_document: "default"
+  pdf_document: "default"
 ---
 
 ```{r setup, include = FALSE}
 library("papaja")
 r_refs("r-references.bib")
+load("/Users/huubvandevoort/Downloads/voorHubie.RData")
 ```
 
 ```{r analysis-preferences, include = FALSE}
@@ -50,14 +47,14 @@ r_refs("r-references.bib")
 set.seed(42)
 knitr::opts_chunk$set(cache.extra = knitr::rand_seed)
 ```
-
-# Citations in papaja, detele appropriately later
+<!---
+# Citations in papaja, detele appropriately later {-}
 
 Add the bibtex entry in the .bib file. You can find the entries in Google scholar, but double check since it is not always correct.
 
 Call the citations in the text:
 
-Citation within parentheses [@R-papaja]
+Citation within parentheses [@cinelli2021echo]
 
 Multiple citations [@R-papaja; @R-base]
 
@@ -66,8 +63,8 @@ In-text citations @R-papaja
 Year only [-@R-base]
 
 Only if your citation appears in the text it will also show up in the Reference list. Don't manually modify the Reference list.
-
-## Executive Summary
+-->
+# Executive Summary {-}
 
 (150 words) -- 0.3 POINTS Summarize the report. Write this as the very last thing.
 
@@ -77,71 +74,26 @@ what are your research questions and hypotheses?
 
 what are your results and the main conclusion?
 
-## Introduction
+# Introduction
+<!-- Dit heb ik gekopieerd omdat ik references wilde testen -->
+Research on social media platforms, such as Twitter and Facebook, extensively explores echo chambers - environments where individuals connect with like-minded peers, reinforcing selective exposure to information aligning with their beliefs [@cinelli2021echo]. These principles, observed on social media platforms marked by informational homogeneity, apply to broader political discourse and policy debates [@jasny2015empirical]. This suggests that the mechanisms of selective exposure observed in social media echo chambers may extend to diverse communication networks [@colleoni2014echo]. In the political domain, these tendencies contribute to polarization and extreme political positions [@colleoni2014echo]. This harms social cohesion and trust, challenging finding common ground between political parties [@mccoy2019toward] and shaping public discourse across diverse communication networks [@levy2019echo]. Despite extensive research on platforms such as Twitter, the impact of echo chambers on YouTube, the second-largest social platform, remains understudied. YouTube's unique structure and user interaction patterns, distinct from platforms like Twitter, may pose challenges in recognizing and understanding echo chambers on this platform.
 
-(about 1000 words) -- 0.5 POINTS Place your topic of choice within the existing literature and explain what you are going to address in this report and why.
+# Methodology
 
--   What is the main topic that is going to be studied in this paper?
+## Dataset
 
--   Why is it important?
+## Research Rationale
 
--   What are the existing studies that address it already?
+# Results and Discussion
 
--   What are your questions and hypotheses? Why are they important? How are they connected to previous work or to a problem you raised?
+## Study 1: {-}
 
--   Which methods are you using? Why?
+## Study 2: {-}
 
--   How is your work going to contribute to the field/or to whom (e.g., industry)?
+```{r echo = FALSE, results = 'asis'}
+plot(gof0)
+```
 
--   What does the rest of the report look like? In one short paragraph, list the topics of the following sections.
-
-## Methodology
-
-### Dataset
-
-(about 500 words) 1 POINT (+ BONUS) \* Which data set are you going to use? Three options:
-
-o Use readily/easily available data (0 bonus points)
-
-o Combine two or more existing datasets (max 0.5 bonus points)
-
-o Scrape or collect your own data (max. 1 bonus point)
-
--   Clearly explain where the data is coming from:
-
-o Who collected the data?
-
-o What is the source?
-
-o When was the data produced?
-
-o How was the data collected?
-
--   Provide descriptive measures of your data (tables, plots, etc.)
-
--   Why is this data useful to study your topic and answer your research questions?
-
--   What is the potential bias in the data? How does this affect your results?
-
-### Data analysis (Research Rationale)
-
-(about 500 words) -- 1 POINTS \* Why are these two methods suitable for your data?
-
--   Why are these two methods suitable for your research questions?
-
--   Are there other methods to address these questions? If yes, why are the methods you chose better for this case?
-
-## Results
-
-(about 2000 words)
-
-### CUG
-
-(about 1000 words) -- 2.5 POINTS
-
--   Present your results appropriately (plots, tables...) and discuss your findings in plain English
-
--   Discuss the meaning of your findings in relation to your hypothesis. (half of the points evaluated in this other part)
 
 ```{r echo = FALSE, results = 'asis'}
 # table example
@@ -156,15 +108,6 @@ rownames(tab) <- NULL
 knitr::kable(tab)
 ```
 
-### ERGM
-
-(about 1000) -- 2.5 POINTS
-
--   Present your results appropriately (plots, tables...) and discuss your findings in plain English
-
--   Discuss the meaning of your findings in relation to your hypothesis. (half of the points evaluated in this other part)
-
-Option 1:
 
 ```{r model 1, echo = FALSE}
 # model results display example
@@ -182,7 +125,6 @@ knitr::kable(texreg::matrixreg(lm.D9))
 
 ```
 
-Option 2
 
 ```{r model 2, echo = FALSE, results = 'asis'}
 # model results display example
@@ -200,7 +142,6 @@ knitr::kable(texreg::matrixreg(list(lm.D9, lm.D90)))
 
 ```
 
-Option 3
 
 ```{r model 3, echo = FALSE}
 # model results display example
@@ -219,7 +160,6 @@ texreg::plotreg(lm.D9)
 
 ```
 
-Option 4
 
 ```{r model 4, echo = FALSE}
 # model results display example
@@ -236,17 +176,6 @@ texreg::plotreg(list(lm.D9, lm.D90))
 
 ```
 
-## Conclusion
-
-(about 350 words) -- 0.7 POINTS What were your topic and research questions again? (1 sentence)
-
-What did you learn from the two analysis you run? \*\*\* most important point to address 0.5 POINTS here
-
-Who benefits from your findings?
-
-What does remain an open problem?
-
-Can you give suggestions for future work in this area?
 
 \newpage
 
@@ -262,4 +191,13 @@ Can you give suggestions for future work in this area?
 
 ```{=tex}
 \endgroup
+```
+
+
+
+\newpage
+
+# (APPENDIX) Appendix {-}
+
+```{r}
 ```
