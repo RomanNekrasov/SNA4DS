@@ -1,0 +1,123 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+graph <- igraph::read_graph(file = "~/SNA4DS/data_preparation/prepared_data/network.graphml", format = 'graphml')
+```
+
+# CUG centrality tests
+
+```{r}
+betw_f <- function(x, directed = TRUE) {  # note: directed = FALSE!
+  x <- snafun::fix_cug_input(x, directed = directed)
+  snafun::g_centralize(x, measure = "betweenness", directed = directed)$centralization
+}
+
+deg_f <- function(x, directed = TRUE) {  # note: directed = FALSE!
+  x <- snafun::fix_cug_input(x, directed = directed)
+  snafun::g_centralize(x, measure = "degree", directed = directed)$centralization
+}
+
+eigen_f <- function(x, directed = TRUE) {  # note: directed = FALSE!
+  x <- snafun::fix_cug_input(x, directed = directed)
+  snafun::g_centralize(x, measure = "eigenvector", directed = directed)$centralization
+}
+
+cug_betw <- sna::cug.test(snafun::to_network(graph), mode = "graph", FUN = betw_f, 
+                                 cmode = "edges", 
+                                 reps = 1000)
+cug_deg <- sna::cug.test(snafun::to_network(graph), mode = "graph", FUN = deg_f, 
+                                 cmode = "edges", 
+                                 reps = 1000)
+cug_eigen <- sna::cug.test(snafun::to_network(graph), mode = "graph", FUN = eigen_f, 
+                                 cmode = "edges", 
+                                 reps = 1000)
+cug_betw
+cug_deg
+cug_eigen
+```
+
+# ERGMs
+
+## Transform node attributes to log scale
+
+```{r}
+log.total_likes <- log(igraph::get.vertex.attribute(graph)$total_likes + 1) 
+graph <- igraph::set.vertex.attribute(graph, "log.total_likes", value=log.total_likes)
+
+log.average_length_comments <- log(igraph::get.vertex.attribute(graph)$average_length_comments) 
+graph <- igraph::set.vertex.attribute(graph, "log.average_length_comments", value=log.average_length_comments)
+
+network <- snafun::to_network(graph)
+```
+
+```{r}
+formula <- network ~ transitiveties("sentiment") +
+                     transitiveties +
+                     gwidegree(decay = 0.25, fixed=TRUE) 
+                    # gwesp(0.05, fixed = TRUE) +
+                    # nodefactor("sentiment") +
+                    # nodecov("log.average_length_comments") +
+                    # nodecov("log.total_likes")
+
+model <- ergm::ergm(formula,
+                    constraints = ~odegrees,
+                    control = ergm::control.ergm(MCMC.burnin = 50000,
+                                                  MCMC.samplesize = 100000,
+                                                  seed = 1223,
+                                                  MCMLE.maxit = 10,
+                                                  parallel = 32,
+                                                  parallel.type = "PSOCK"),
+                    verbose = 1)
+
+summary(model)
+```
+
+```{r}
+# Base formula
+base_formula <- network ~ transitiveties("sentiment") + transitiveties
+
+# List of terms to add
+additional_terms <- list("gwesp(0.05, fixed = TRUE)", 
+                         "nodefactor('sentiment')", 
+                         "nodecov('log.average_length_comments')", 
+                         "nodecov('log.total_likes')")
+
+# Initialize list to store models
+models <- list()
+model_summaries <- list()
+
+# Loop over additional terms
+for (i in seq_along(additional_terms)) {
+    # Create new formula by adding the term
+    new_formula <- as.formula(paste(deparse(base_formula), "+", additional_terms[i]))
+    
+    # Fit the model
+    model <- ergm::ergm(new_formula,
+                        constraints = ~odegrees,
+                        control = ergm::control.ergm(MCMC.burnin = 50000,
+                                                      MCMC.samplesize = 100000,
+                                                      seed = 1223,
+                                                      MCMLE.maxit = 10,
+                                                      parallel = 32,
+                                                      parallel.type = "PSOCK"),
+                        verbose = 1)
+    
+    # Store the model
+    models[[paste0("model_", i)]] <- model
+
+    # Store the summary
+    model_summaries[[paste0("model_", i)]] <- summary(model)
+}
+```
+
+```{r}
+model.diagnostics <- ergm::mcmc.diagnostics(model)
+```
+
+```{r}
+model.gof <- ergm::gof(model)
+snafun::stat_plot_gof(model.gof)
+```
