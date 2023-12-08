@@ -1,0 +1,67 @@
+---
+title: "Snowball sampling and statistics"
+output: html_notebook
+---
+
+```{r}
+g <- igraph::read_graph(file = '/Users/huubvandevoort/Desktop/SNA4DS/6. Project/SNA4DS/data_preparation/prepared_data/network.graphml',
+                   format = 'graphml')
+
+# only taking biggest component
+components <- igraph::components(g)
+largest_component <- which.max(components$csize)
+subgraph <- igraph::induced_subgraph(g, 
+                                     vids = which(components$membership == largest_component))
+```
+
+```{r}
+make_snowballs <- function(G, sizes, nodes, order, mode = "all") {
+  egos <- igraph::make_ego_graph(subgraph, order = 4)
+  graphs <- c()
+  
+  for (i in 1:length(sizes)) {
+    for (ego in egos) {
+      graph_size <- igraph::vcount(ego)
+      if (graph_size >= sizes[i]) {
+        graphs[[i]] <- ego
+        file <- paste("snowball_size_", graph_size, ".graphml", sep="")
+        fp <- file.path("snowballs", file)
+        igraph::write_graph(graph = ego, file = fp, format = "graphml")
+        break
+      }
+    }
+  }
+  return(graphs)
+}
+
+nodes <- igraph::
+snowballs <- (make_snowballs(subgraph, order = 3, sizes = c(25, 50, 100, 150, 200), 
+                             nodes = mode = "all"))
+```
+
+```{r}
+temp <- snowballs[1]
+
+components <- igraph::components(temp)
+
+for (s in snowballs) {
+  print(igraph::count_components(s))
+}
+```
+
+```{r}
+result_frame <- matrix(ncol = 18, nrow = 0)
+# names(result_frame) <- c("nodes", "edges", "triads", "density")
+
+for (s in snowballs) {
+  nodes <- snafun::count_vertices(s)
+  edges <- snafun::count_edges(s)
+  triads <- snafun::count_triads(s) |> as.list() |> t()
+  row <- cbind(nodes, edges, triads)
+  result_frame <- rbind(result_frame, row)
+}
+
+result_frame
+
+
+```

@@ -1,0 +1,274 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code.
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*.
+
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Ctrl+Alt+I*.
+
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Ctrl+Shift+K* to preview the HTML file).
+
+The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
+
+```{r}
+setwd("C:\\Users\\rnekraso\\SNA4DS")
+setwd("C:\\Users\\rnekraso\\SNA4DS")
+
+### Load data
+edges <- read.csv("edge_df.csv", header=TRUE, stringsAsFactors = FALSE)
+vertices <- read.csv("vertex_df_icounts.csv", header=TRUE, stringsAsFactors = FALSE)
+
+### Removing the youtube#commentThreads only keeping the "youtube#comment"s
+edges <- edges[edges$kind != 'youtube#commentThread', ]
+
+### Renaming the columns to sender and receiver
+names(edges)[names(edges)=='author_id'] <- 'sender'
+names(edges)[names(edges)=='dest_id'] <- 'receiver'
+
+###  Rearranging columns to make 'sender' and 'receiver' the first two columns
+###  this is required for the igraph function to create the graph object
+edges <- edges[c("sender", "receiver", setdiff(names(edges), c("sender", "receiver")))]
+
+result <- data.frame()
+
+### Concat
+# edges$senderreceiver <- paste(edges$sender, edges$receiver)
+# edges <- edges[!duplicated(edges$senderreceiver), ]  # Removing duplicates
+# edges$senderreceiver <- NULL
+
+### handling NA values
+edges <- edges[edges$sender != 'nan', ]
+edges <- edges[edges$sender != '', ]
+edges <- edges[edges$receiver != 'nan', ]
+edges <- edges[edges$receiver != '', ]
+
+### Creating graph object
+graph <- igraph::graph_from_data_frame(edges, directed = TRUE, vertices = vertices)
+graph <- snafun::remove_isolates(graph)
+# suppressWarnings({
+# graph <- igraph::graph_from_data_frame(edges, directed = TRUE) |>
+#   snafun::remove_loops() |>
+#   snafun::remove_vertices(vertices = "NA")
+# })
+
+##p this is how you read from a path roman
+
+fp_graph = file.path(".","data_preparation", "prepared_data", "network.graphml")
+fp_snowballs = file.path(".", "data_preparation", "prepared_data", "snowballs")
+
+graph1 <- igraph::read.graph("C:\\Users\\rnekraso\\SNA4DS\\data_analysis\\snowballs\\snowball1.graphml", format = "graphml")
+
+graph <- igraph::read_graph(file = "C:\\Users\\rnekraso\\SNA4DS\\data_preparation\\prepared_data\\network.graphml", format = 'graphml')
+
+
+
+graph1
+```
+
+ 
+
+```{r}
+# Assuming 'graph' is your original igraph network object
+# Obtain the edge list of the graph
+edge_list <- igraph::get.edgelist(graph)
+
+# Identify duplicate edges
+duplicate_edges <- duplicated(edge_list) | duplicated(edge_list, fromLast = TRUE)
+
+# Filter out the duplicate edges
+unique_edge_list <- edge_list[!duplicate_edges, ]
+
+# Create a new igraph object with the unique edges
+unique_graph <- igraph::graph_from_edgelist(unique_edge_list, directed = igraph::is.directed(graph))
+
+snafun::g_summary(unique_graph)
+```
+
+```{r}
+snafun::g_summary(graph)
+```
+
+```{r}
+hist(snafun::v_degree(unique_graph), main="degree distribution of network")
+?hist()
+```
+
+```{r}
+snafun::plot_centralities(unique_graph)
+```
+
+```{r}
+components <- igraph::components(unique_graph)
+largest_component <- which.max(components$csize)
+subgraph <- igraph::induced_subgraph(unique_graph, which(components$membership == largest_component))
+```
+
+```{r}
+snafun::g_centralize(unique_graph, measure = "degree", directed = TRUE)
+snafun::g_centralize(subgraph, measure = "closeness", directed = TRUE)
+snafun::g_centralize(unique_graph, measure = "betweenness", directed = TRUE)
+snafun::g_centralize(unique_graph, measure = "eigenvector", directed = TRUE)
+```
+
+```{r}
+adj_matrix <- as.matrix(snafun::to_(unique_graph))
+cug <- sna::cug.test(snafun::to_network(unique_graph), mode="digraph",
+               FUN = sna::gtrans, 
+               cmode = "edges", reps = 1000)
+cug
+```
+
+```{r}
+trans_f <- function(x, directed = TRUE) {  # note: directed = FALSE!
+  x <- snafun::fix_cug_input(x, directed = directed)
+  snafun::g_transitivity(x)
+}
+
+cug_trans <- sna::cug.test(snafun::to_network(unique_graph), mode = "graph", 
+                                 FUN = trans_f, 
+                                 cmode = "edges", reps = 1000)
+cug_trans
+```
+
+```{r}
+betw_f <- function(x, directed = TRUE) {  # note: directed = FALSE!
+  x <- snafun::fix_cug_input(x, directed = directed)
+  snafun::g_centralize(x, measure = "betweenness", directed = directed)$centralization
+}
+
+deg_f <- function(x, directed = TRUE) {  # note: directed = FALSE!
+  x <- snafun::fix_cug_input(x, directed = directed)
+  snafun::g_centralize(x, measure = "degree", directed = directed)$centralization
+}
+
+eigen_f <- function(x, directed = TRUE) {  # note: directed = FALSE!
+  x <- snafun::fix_cug_input(x, directed = directed)
+  snafun::g_centralize(x, measure = "eigenvector", directed = directed)$centralization
+}
+
+cug_betw <- sna::cug.test(snafun::to_network(unique_graph), mode = "graph", FUN = betw_f, 
+                                 cmode = "edges", 
+                                 reps = 1000)
+cug_deg <- sna::cug.test(snafun::to_network(unique_graph), mode = "graph", FUN = deg_f, 
+                                 cmode = "edges", 
+                                 reps = 1000)
+cug_eigen <- sna::cug.test(snafun::to_network(unique_graph), mode = "graph", FUN = eigen_f, 
+                                 cmode = "edges", 
+                                 reps = 1000)
+cug_betw
+cug_deg
+cug_eigen
+```
+
+```{r}
+plot(
+    snafun::remove_isolates(subgraph),
+    vertex.label=NA,
+    vertex.size = 2,
+    vertex.color = "red",
+    edge.arrow.size = .2,
+    edge.color = "grey",
+    main = "Plot of merged graph"
+  )
+```
+
+```{r}
+graph2 <- snafun::to_network(graph1)
+graph2
+igraph::vertex(graph1)
+
+```
+
+```{r}
+snafun::to_network(snafun::to_igraph(graph1))
+snafun::extract_all_vertex_attributes(graph1)
+```
+
+```{r}
+# Randomly sample the edges
+sampled_edges <- sample(igraph::E(graph), 5, replace = FALSE)
+
+# Create the subgraph based on the sampled edges
+smaller_network <- igraph::subgraph.edges(graph, sampled_edges, delete.vertices = FALSE)
+
+graph3 <- snafun::to_network(smaller_network)
+
+plot(smaller_network)
+```
+
+```{r}
+# Assuming 'graph2' is your original network object
+
+# Select a random starting node
+start_node <- sample(igraph::V(graph), 1)
+
+# Perform snowball sampling
+neighborhoods <- igraph::graph.neighborhood(graph, order = 5, nodes = start_node, mode = "all")
+
+# Flatten the list to get a vector of vertex IDs
+neighborhood_nodes <- unlist(neighborhoods)
+
+# Create the subgraph
+smaller_network <- igraph::induced_subgraph(graph, neighborhood_nodes)
+
+# 'smaller_network' is now the network sampled through the snowball method
+
+smaller_network
+```
+
+```{r}
+#start_values <- c(edges = -2, nodematch.sentiment = 1, gwesp.fixed.0.25 = 2)
+
+run1 <- ergm::ergm(graph2 ~ edges + transitiveties("sentiment") +
+#                     gwesp(0.05, fixed = T) +
+                      transitiveties +
+                      nodefactor("sentiment") +
+                      nodecov("log.average_length_comments") +
+                      nodecov("log.total_likes"),
+#                      nodematch("comment_length_category"),
+#                    start = start_values,
+#                    constraints = ~idegrees,
+                    control = ergm::control.ergm(MCMC.burnin = 5000,
+                                              MCMC.samplesize = 10000,
+                                              seed = 123456,
+                                              MCMLE.maxit = 10,
+                                              parallel = 16,
+                                              parallel.type = "PSOCK"))
+
+summary(run1)
+```
+
+```{r}
+ergm::mcmc.diagnostics(run1)
+```
+
+```{r}
+snafun::g_summary(graph2)
+run1.gof <- ergm::gof(run1)
+snafun::stat_plot_gof(run1.gof)
+```
+
+```{r}
+snafun::list_vertex_attributes(graph)
+?ergm::ergm.terms
+
+```
+
+```{r}
+log.total_likes <- log(igraph::get.vertex.attribute(graph)$total_likes + 1) 
+graph <- igraph::set.vertex.attribute(graph, "log.total_likes", value=log.total_likes)
+
+log.average_length_comments <- log(igraph::get.vertex.attribute(graph)$average_length_comments) 
+graph <- igraph::set.vertex.attribute(graph, "log.average_length_comments", value=log.average_length_comments)
+
+```
+
+```{r}
+graph_dd <- snafun::v_degree(graph, mode="in")
+in_degree_dist <- table(graph_dd)
+base::plot(in_degree_dist, main="Degree Distribution of the Graph", xlab="oDegree", ylab="Frequency", type="h")
+
+```

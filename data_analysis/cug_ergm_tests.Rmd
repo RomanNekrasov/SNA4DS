@@ -1,0 +1,127 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+graph <- igraph::read_graph(file = "~/SNA4DS/data_preparation/prepared_data/network.graphml", format = 'graphml')
+```
+
+# CUG centrality tests
+
+```{r}
+betw_f <- function(x, directed = TRUE) {
+  x <- snafun::fix_cug_input(x, directed = directed)
+  snafun::g_centralize(x, measure = "betweenness", directed = directed)$centralization
+}
+
+deg_f_in <- function(x, directed = TRUE) { 
+  x <- snafun::fix_cug_input(x, directed = directed)
+  snafun::g_centralize(x, measure = "degree", mode ='in', directed = directed)$centralization
+}
+
+deg_f_out <- function(x, directed = TRUE) { 
+  x <- snafun::fix_cug_input(x, directed = directed)
+  snafun::g_centralize(x, measure = "degree", mode ='out', directed = directed)$centralization
+}
+
+eigen_f <- function(x, directed = TRUE) {
+  x <- snafun::fix_cug_input(x, directed = directed)
+  snafun::g_centralize(x, measure = "eigenvector", directed = directed)$centralization
+}
+
+cug_betw <- sna::cug.test(snafun::to_network(graph), mode = "graph", FUN = betw_f, 
+                                 cmode = "edges", 
+                                 reps = 10000)
+cug_deg_in <- sna::cug.test(snafun::to_network(graph), mode = "graph", FUN = deg_f_in, 
+                                 cmode = "edges", 
+                                 reps = 10000)
+cug_deg_out <- sna::cug.test(snafun::to_network(graph), mode = "graph", FUN = deg_f_out, 
+                                 cmode = "edges", 
+                                 reps = 10000)
+cug_eigen <- sna::cug.test(snafun::to_network(graph), mode = "graph", FUN = eigen_f, 
+                                 cmode = "edges", 
+                                 reps = 10000)
+
+
+cug_results <- data.frame(
+  Centralization = c('betweenness', 'indegree', 'outdegree', 'eigenvector'),
+  P = c(cug_betw$pgteobs, cug_deg_in$pgteobs, cug_deg_out$pgteobs, cug_eigen$pgteobs))
+
+names(cug_results) <- c('centralization measure', 'Pr(X>=Obs)')
+print(cug_results)
+```
+
+# ERGMs
+
+## Transform node attributes to log scale
+
+```{r}
+log.total_likes <- log(igraph::get.vertex.attribute(graph)$total_likes + 1) 
+graph <- igraph::set.vertex.attribute(graph, "log.total_likes", value=log.total_likes)
+
+log.average_length_comments <- log(igraph::get.vertex.attribute(graph)$average_length_comments) 
+graph <- igraph::set.vertex.attribute(graph, "log.average_length_comments", value=log.average_length_comments)
+
+network <- snafun::to_network(graph)
+
+```
+
+## Define ERGM formulas
+
+```{r}
+# List of formulas
+formulas <- list(
+    network ~ transitiveties("sentiment") + transitiveties + nodematch("sentiment"),
+    network ~ transitiveties("sentiment") + transitiveties + nodematch("sentiment") + nodefactor("sentiment"),
+    network ~ transitiveties("sentiment") + transitiveties + nodematch("sentiment") + nodefactor("sentiment") + gwidegree(decay = 0.05, fixed=TRUE),
+    network ~ transitiveties("sentiment") + transitiveties + nodematch("sentiment") + nodefactor("sentiment") + gwidegree(decay = 0.05, fixed=TRUE) + nodecov("log.average_length_comments"),
+    network ~ transitiveties("sentiment") + transitiveties + nodematch("sentiment") +
+    nodefactor("sentiment") + gwidegree(decay = 0.05, fixed=TRUE) + nodecov("log.total_likes"),
+    network ~ transitiveties("sentiment") + transitiveties + nodematch("sentiment") +
+    nodefactor("sentiment") + gwidegree(decay = 0.05, fixed=TRUE) + nodecov("log.average_length_comments") + nodecov("log.total_likes")
+)
+
+```
+
+## Run ERGMs
+
+```{r}
+# Initialize lists to store models and summaries
+models <- list()
+model_summaries <- list()
+
+# Loop over the formulas
+for (i in seq_along(formulas)) {
+    # Fit the model with the current formula
+    model <- ergm::ergm(formulas[[i]],
+                        constraints = ~odegrees,
+                        control = ergm::control.ergm(MCMC.burnin = 50000,
+                                                      MCMC.samplesize = 100000,
+                                                      seed = 1223,
+                                                      MCMLE.maxit = 10,
+                                                      parallel = 24,
+                                                      parallel.type = "PSOCK"),
+                        verbose = 1)
+    
+    # Store the model
+    models[[paste0("model_", i)]] <- model
+
+    # Store the summary
+    model_summaries[[paste0("model_", i)]] <- summary(model)
+}
+```
+
+```{r}
+models_tabel <- texreg::screenreg(models)
+models_tabel
+```
+
+```{r}
+ergm::mcmc.diagnostics(models$model_5)
+```
+
+```{r}
+model_5.gof <- ergm::gof(models$model_5)
+snafun::stat_plot_gof(model_5.gof)
+```
