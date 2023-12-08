@@ -1,0 +1,21 @@
+\begin{table*}[hbt]
+\ifnextchar[{\eatarg}{}
+[tbp]
+
+\begin{center}
+\begin{threeparttable}
+
+\caption{\label{tab:dyad-count-table}Dyad count for the Network}
+
+\begin{tabular}{lll}
+\toprule
+Mutual & \multicolumn{1}{c}{Asymmetric} & \multicolumn{1}{c}{Null}\\
+\midrule
+70 & 413 & 51843\\
+\bottomrule
+\end{tabular}
+
+\end{threeparttable}
+\end{center}
+
+\end{table*}

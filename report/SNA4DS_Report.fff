@@ -1,0 +1,40 @@
+\begin{figure*}[hbt]
+\ifnextchar[{\eatarg}{}
+
+
+{\centering \includegraphics{SNA4DS_Report_files/figure-latex/main-network-plot-1}
+
+}
+
+\caption{The plot of the network used for analysis. It shows the majority of the nodes labelled negative.}\label{fig:main-network-plot}
+\end{figure*}
+\begin{figure*}[hbt]
+\ifnextchar[{\eatarg}{}
+
+
+{\centering \includegraphics{SNA4DS_Report_files/figure-latex/degree-in-1}
+
+}
+
+\caption{The plot above shows the indegree distribution for the actors in the network.}\label{fig:degree-in}
+\end{figure*}
+\begin{figure*}[hbt]
+\ifnextchar[{\eatarg}{}
+
+
+{\centering \includegraphics{SNA4DS_Report_files/figure-latex/degree-out-1}
+
+}
+
+\caption{The plot above shows the outdegree distribution for the actors in our network.}\label{fig:degree-out}
+\end{figure*}
+\begin{figure*}[hbt]
+\ifnextchar[{\eatarg}{}
+
+
+{\centering \includegraphics[width=1.67in]{SNA4DS_Report_files/figures/transitive_triad_2}
+
+}
+
+\caption{An echo chamber representation within the structural network configuration, also known as a transitive triad.}\label{fig:echo-chamber-structure}
+\end{figure*}

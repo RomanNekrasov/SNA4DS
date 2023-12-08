@@ -13,12 +13,16 @@ affiliation:
     institution: "Jheronimus Academy of Data Science"
 wordcount: 0
   
-bibliography: ["r-references.bib"]
+bibliography: 
+  - "r-references.bib"
+appendix:
+  - "SNA4DS_Report_files/appendix/appendix_a.Rmd"
+  - "SNA4DS_Report_files/appendix/appendix_b.Rmd"
 
 #Rendering options 
 toc: no
 toc_float: no
-floatsintext: no
+floatsintext: yes
 figurelist: no
 tablelist: no
 footnotelist: no
@@ -39,7 +43,11 @@ output:
 ```{r setup, include = FALSE}
 library("papaja")
 r_refs("r-references.bib")
+knitr::opts_chunk$set(fig.pos = "H", out.extra = "")
+
+# Loading environments
 load("/Users/huubvandevoort/Downloads/hierstaatveelkakin.RData")
+load("/Users/huubvandevoort/Downloads/voorHubie.RData")
 ```
 
 ```{r analysis-preferences, include = FALSE}
@@ -64,6 +72,7 @@ Year only [-@R-base]
 
 Only if your citation appears in the text it will also show up in the Reference list. Don't manually modify the Reference list.
 -->
+
 # Executive Summary {-}
 
 (150 words) -- 0.3 POINTS Summarize the report. Write this as the very last thing.
@@ -80,23 +89,64 @@ Research on social media platforms, such as Twitter and Facebook, extensively ex
 
 ## Dataset
 <!-- Network plot -->
-```{r echo = FALSE}
+(ref:main-network) The plot of the network used for analysis. It shows the majority of the nodes labelled negative.
+```{r main-network-plot, echo = FALSE, include = TRUE, fig.align='center', fig.cap = "(ref:main-network)", fig.dim=c(8,8)}
+# Code for plotting the network
+igraph::V(graph)$color <- "black"
+igraph::V(graph) [ sentiment == 'negative' ]$color <- "#F25F5C"
+igraph::V(graph) [ sentiment == 'positive' ]$color <- "#9DBF9E"
+igraph::V(graph) [ sentiment == 'neutral' ]$color <- "#FFE066"
+
+plot(
+  graph,
+  vertex.label = NA,
+  edge.arrow.size = .35,
+  vertex.size = 3,
+  vertex.color = igraph::V(graph)$color
+)
+
+colrs <- c("#F25F5C","#9DBF9E","#FFE066")
+graphics::legend(x = 0.75, y = -.85, c("Negative","Positive","Neutral"), 
+                 pch = 21, col = "#777777", pt.bg = colrs, pt.cex = 1.5, 
+                 cex = .8, bty = "o", ncol = 1)
 
 ```
 
-<!-- Degree distribution in -->
-```{r echo = FALSE}
-
+<!-- Indegree distribution -->
+(ref:degree-in) The plot above shows the indegree distribution for the actors in the network. 
+```{r degree-in, echo = FALSE, include = TRUE, fig.align='center', fig.cap = "(ref:degree-in)", fig.dim=c(4,4)}
+# Code for plotting the indegree distribution
+degree_distribution_in <- snafun::g_degree_distribution(graph, 
+                                                        mode = "in", 
+                                                        type = "count"
+                                                        )
+# Create a frequency plot with lines
+plot(1:length(degree_distribution_in), degree_distribution_in, type = "h", lwd = 2, 
+     main = "Indegree Distribution", xlab = "Indegree", ylab = "Frequency")
 ```
 
-<!-- Degree distribution out -->
-```{r echo = FALSE}
+<!-- Outdegree distribution -->
+(ref:degree-out) The plot above shows the outdegree distribution for the actors in our network.
+```{r degree-out, include = TRUE, echo = FALSE, results = "hide", fig.align='center', fig.cap = "(ref:degree-out)", fig.dim=c(4,4)}
+# Code for plotting the outdegree distribution
+degree_distribution_out <- snafun::g_degree_distribution(graph, 
+                                                         mode = "out", 
+                                                         type = "count"
+                                                         )
 
+# Create a frequency plot with lines
+plot(1:length(degree_distribution_out), degree_distribution_out, type = "h", lwd = 2, 
+     main = "Outdegree Distribution", xlab = "Outdegree", ylab = "Frequency")
 ```
 
 <!-- Table for reciprocal dyads -->
-```{r echo = FALSE}
-
+(ref:dyad-count-table) An overview of the reciprocal dyads. 
+```{r dyad-count-table, echo = FALSE, include = TRUE, fig.align='center', fig.pos='H'}
+dyad_count <- snafun::count_dyads(graph, echo = FALSE)
+# knitr::kable(dyad_count, caption = "(ref:dyad-count-table)")
+apa_table(dyad_count,
+          placement = "h",
+          caption = "(ref:dyad-count-table)")
 ```
 
 ### Potential Bias
@@ -104,9 +154,24 @@ Research on social media platforms, such as Twitter and Facebook, extensively ex
 ## Research Rationale
 
 <!-- Figure for displaying structrue of 030T -->
-```{r echo = FALSE}
+(ref:echo-chamber-structure) An echo chamber representation within the structural network configuration, also known as a transitive triad.
+```{r echo-chamber-structure, fig.align='center', fig.cap = "(ref:echo-chamber-structure)", echo = FALSE}
+knitr::include_graphics("SNA4DS_Report_files/figures/transitive_triad_2.png")
+```
+
+<!-- CUG results -->
+(ref:cug-results) The results of the CUG test. 
+```{r cug-results, echo = FALSE, include = TRUE, fig.align='center', fig.cap = "(ref:cug-results)", fig.dim=c(4,4)}
 
 ```
+
+Table: Results of CUG tests.
+
+|                           | Empirical Value | Probability versus simulations $Pr(X>=Obs)$ |
+| ------------------------- | --------------- | ------------------------------------------ |
+| **Eigenvector Centrality** | 0.92            | 0.466                                      |
+| **Degree Centrality**      | 0.12            | 0                                          |
+| **Betweenness Centrality** | 0.13            | 0.451                                      |
 
 
 # Results
@@ -117,96 +182,9 @@ Research on social media platforms, such as Twitter and Facebook, extensively ex
 
 # Discussion and Conclusion
 
-```{r echo = FALSE, results = 'asis'}
-plot(gof0)
-```
-
-
-```{r echo = FALSE, results = 'asis'}
-# table example
-cn <- c("age", "gender", "eyes_col")
-one <- c(7, "M", "BLUE")
-two <- c(8, "F", "BROWN")
-three <- c(8, "M", "GREEN")
-four <- c(7, "F", "PINK")
-
-tab <- rbind(cn, one, two, three, four)
-rownames(tab) <- NULL
-knitr::kable(tab)
-```
-
-
-```{r model 1, echo = FALSE}
-# model results display example
-ctl <- c(4.17,5.58,5.18,6.11,4.50,4.61,5.17,4.53,5.33,5.14)
-trt <- c(4.81,4.17,4.41,3.59,5.87,3.83,6.03,4.89,4.32,4.69)
-group <- gl(2, 10, 20, labels = c("Ctl","Trt"))
-weight <- c(ctl, trt)
-lm.D9 <- lm(weight ~ group)
-lm.D90 <- lm(weight ~ group - 1)
-
-# install.packages("texreg")
-
-knitr::kable(texreg::matrixreg(lm.D9))
-
-
-```
-
-
-```{r model 2, echo = FALSE, results = 'asis'}
-# model results display example
-ctl <- c(4.17,5.58,5.18,6.11,4.50,4.61,5.17,4.53,5.33,5.14)
-trt <- c(4.81,4.17,4.41,3.59,5.87,3.83,6.03,4.89,4.32,4.69)
-group <- gl(2, 10, 20, labels = c("Ctl","Trt"))
-weight <- c(ctl, trt)
-lm.D9 <- lm(weight ~ group)
-lm.D90 <- lm(weight ~ group - 1)
-
-# install.packages("texreg")
-
-knitr::kable(texreg::matrixreg(list(lm.D9, lm.D90)))
-
-
-```
-
-
-```{r model 3, echo = FALSE}
-# model results display example
-ctl <- c(4.17,5.58,5.18,6.11,4.50,4.61,5.17,4.53,5.33,5.14)
-trt <- c(4.81,4.17,4.41,3.59,5.87,3.83,6.03,4.89,4.32,4.69)
-group <- gl(2, 10, 20, labels = c("Ctl","Trt"))
-weight <- c(ctl, trt)
-lm.D9 <- lm(weight ~ group)
-lm.D90 <- lm(weight ~ group - 1)
-
-# install.packages("texreg")
-
-
-texreg::plotreg(lm.D9)
-
-
-```
-
-
-```{r model 4, echo = FALSE}
-# model results display example
-ctl <- c(4.17,5.58,5.18,6.11,4.50,4.61,5.17,4.53,5.33,5.14)
-trt <- c(4.81,4.17,4.41,3.59,5.87,3.83,6.03,4.89,4.32,4.69)
-group <- gl(2, 10, 20, labels = c("Ctl","Trt"))
-weight <- c(ctl, trt)
-lm.D9 <- lm(weight ~ group)
-lm.D90 <- lm(weight ~ group - 1)
-
-# install.packages("texreg")
-
-texreg::plotreg(list(lm.D9, lm.D90))
-
-```
-
-
 \newpage
 
-# References
+# References {-}
 
 ```{=tex}
 \begingroup
@@ -220,11 +198,15 @@ texreg::plotreg(list(lm.D9, lm.D90))
 \endgroup
 ```
 
-
-
 \newpage
 
-# (APPENDIX) Appendix {-}
+# Appendix A {-}
 
-```{r}
+```{r child = "SNA4DS_Report_files/appendix/appendix_a.Rmd"}
 ```
+
+# Appendix B {-}
+
+```{r child = "SNA4DS_Report_files/appendix/appendix_b.Rmd"}
+```
+
