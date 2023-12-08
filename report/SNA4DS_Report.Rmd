@@ -45,6 +45,12 @@ library("papaja")
 r_refs("r-references.bib")
 knitr::opts_chunk$set(fig.pos = "H", out.extra = "")
 
+setwd("../data_preparation/prepared_data")
+graph <- igraph::read_graph(
+  file = "network.graphml",
+  format = "graphml"
+)
+
 # Loading environments
 load("/Users/huubvandevoort/Downloads/hierstaatveelkakin.RData")
 load("/Users/huubvandevoort/Downloads/voorHubie.RData")
@@ -121,8 +127,9 @@ degree_distribution_in <- snafun::g_degree_distribution(graph,
                                                         type = "count"
                                                         )
 # Create a frequency plot with lines
-plot(1:length(degree_distribution_in), degree_distribution_in, type = "h", lwd = 2, 
-     main = "Indegree Distribution", xlab = "Indegree", ylab = "Frequency")
+plot(1:length(degree_distribution_in), degree_distribution_in, type = "h", 
+     lwd = 2, main = "Indegree Distribution",
+     xlab = "Indegree", ylab = "Frequency")
 ```
 
 <!-- Outdegree distribution -->
@@ -135,8 +142,9 @@ degree_distribution_out <- snafun::g_degree_distribution(graph,
                                                          )
 
 # Create a frequency plot with lines
-plot(1:length(degree_distribution_out), degree_distribution_out, type = "h", lwd = 2, 
-     main = "Outdegree Distribution", xlab = "Outdegree", ylab = "Frequency")
+plot(1:length(degree_distribution_out), degree_distribution_out, type = "h", 
+     lwd = 2, main = "Outdegree Distribution", 
+     xlab = "Outdegree", ylab = "Frequency")
 ```
 
 <!-- Table for reciprocal dyads -->
@@ -156,7 +164,10 @@ apa_table(dyad_count,
 <!-- Figure for displaying structrue of 030T -->
 (ref:echo-chamber-structure) An echo chamber representation within the structural network configuration, also known as a transitive triad.
 ```{r echo-chamber-structure, fig.align='center', fig.cap = "(ref:echo-chamber-structure)", echo = FALSE}
-knitr::include_graphics("SNA4DS_Report_files/figures/transitive_triad_2.png")
+# Reading file from figures directory
+knitr::include_graphics(
+  "SNA4DS_Report_files/figures/transitive_triad_2.png"
+  )
 ```
 
 <!-- CUG results -->
