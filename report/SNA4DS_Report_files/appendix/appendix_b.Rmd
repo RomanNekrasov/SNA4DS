@@ -10,3 +10,96 @@ centralities_plot <- snafun::plot_centralities(
   rescaled = FALSE
 )
 ```
+
+```{r indegree-plot, echo = FALSE}
+igraph::V(graph)$color <- "orange"
+igraph::V(graph) [ sentiment == 'negative' ]$color <- "#F25F5C"
+igraph::V(graph) [ sentiment == 'positive' ]$color <- "#9DBF9E"
+igraph::V(graph) [ sentiment == 'neutral' ]$color <- "orange"
+
+my_df <- data.frame(
+  igraph::get.vertex.attribute(graph, name = "id"), 
+  igraph::get.vertex.attribute(graph, name = "color"),
+  1:324
+  )
+
+# v_degree <- snafun::v_degree(graph, mode = "in", )
+v_degree <- igraph::degree(graph, mode = "in")
+# names(v_degree) <- "degree"
+
+# my_df[is.na(my_df)] <- 0
+
+my_df <- cbind(my_df, v_degree)
+
+names(my_df) <- c("id", "color", "new_id", "degree")
+
+plot(y = my_df$new_id, 
+     x = my_df$degree,
+     xlab = "indegree",
+     ylab ="",
+     col = my_df$color,
+     type = "b",
+     pch = 16)
+
+# Add a legend
+legend("bottomright",                # Location of the legend. Change as needed.
+       legend = c("Negative: 253", "Positive: 6", "Neutral: 62"),  # Labels in the legend
+       col = c("#F25F5C", "#9DBF9E", "orange"),         # Colors corresponding to labels
+       pch = 16)
+```
+
+```{r out-degree-plot, echo = FALSE}
+igraph::V(graph)$color <- "orange"
+igraph::V(graph) [ sentiment == 'negative' ]$color <- "#F25F5C"
+igraph::V(graph) [ sentiment == 'positive' ]$color <- "#9DBF9E"
+igraph::V(graph) [ sentiment == 'neutral' ]$color <- "orange"
+
+my_df <- data.frame(
+  igraph::get.vertex.attribute(graph, name = "id"), 
+  igraph::get.vertex.attribute(graph, name = "color"),
+  1:324
+  )
+
+# v_degree <- snafun::v_degree(graph, mode = "in", )
+v_degree <- igraph::degree(graph, mode = "out")
+# names(v_degree) <- "degree"
+
+# my_df[is.na(my_df)] <- 0
+
+my_df <- cbind(my_df, v_degree)
+
+names(my_df) <- c("id", "color", "new_id", "degree")
+
+plot(y = my_df$new_id, 
+     x = my_df$degree,
+     xlab = "outdegree",
+     ylab ="",
+     col = my_df$color,
+     type = "b",
+     pch = 16)
+
+# Add a legend
+legend("topright",                # Location of the legend. Change as needed.
+       legend = c("Negative: 253", "Positive: 6", "Neutral: 62"),  # Labels in the legend
+       col = c("#F25F5C", "#9DBF9E", "orange"),         # Colors corresponding to labels
+       pch = 16)
+```
+
+# ERGM Results {-}
+```{r ergm-results-plot, echo = FALSE, fig.height=10, warning = FALSE}
+texreg::plotreg(models)
+```
+
+
+(ref:ergm-results-table) Results for the ERGM models
+```{r ergm-results-table, echo = FALSE, warning = FALSE}
+
+knitr::kable(
+  texreg::matrixreg(models),
+  align = 'c',
+  caption = "(ref):ergm-results-table"
+             )
+
+```
+
+

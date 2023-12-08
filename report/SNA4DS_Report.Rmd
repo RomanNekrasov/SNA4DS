@@ -36,8 +36,6 @@ classoption: "man"
 output:
   papaja::apa6_pdf:
     keep_tex: FALSE
-  word_document: "default"
-  pdf_document: "default"
 ---
 
 ```{r setup, include = FALSE}
@@ -51,9 +49,9 @@ graph <- igraph::read_graph(
   format = "graphml"
 )
 
-# Loading environments
-load("/Users/huubvandevoort/Downloads/hierstaatveelkakin.RData")
-load("/Users/huubvandevoort/Downloads/voorHubie.RData")
+# Loading environments with our data
+setwd("../../data_analysis")
+load("model_results.RData")
 ```
 
 ```{r analysis-preferences, include = FALSE}
@@ -80,20 +78,38 @@ Only if your citation appears in the text it will also show up in the Reference 
 -->
 
 # Executive Summary {-}
-
-(150 words) -- 0.3 POINTS Summarize the report. Write this as the very last thing.
-
-- What is the main topic you are addressing?
-- What are your research questions and hypotheses?
-- What are your results and the main conclusion?
+This study explores the phenomenon of echo chambers on YouTube. It aims to understand how certain users or groups influence conversations and network structures, particularly in the context of politically charged content on smaller, politically focused YouTube channels. The study employs advanced quantitative methods, including Exponential Random Graph Models (ERGMs) and centrality measures, to analyze the presence and impact of prominent users in YouTube comment sections and the existence of echo chambers within these sections. The results contribute to a deeper understanding of social interactions on YouTube, addressing gaps and offering new insights into the platform's social dynamics, especially related to far-right content.
 
 # Introduction
-<!-- Dit heb ik gekopieerd omdat ik references wilde testen -->
-Research on social media platforms, such as Twitter and Facebook, extensively explores echo chambers - environments where individuals connect with like-minded peers, reinforcing selective exposure to information aligning with their beliefs [@cinelli2021echo]. These principles, observed on social media platforms marked by informational homogeneity, apply to broader political discourse and policy debates [@jasny2015empirical]. This suggests that the mechanisms of selective exposure observed in social media echo chambers may extend to diverse communication networks [@colleoni2014echo]. In the political domain, these tendencies contribute to polarization and extreme political positions [@colleoni2014echo]. This harms social cohesion and trust, challenging finding common ground between political parties [@mccoy2019toward] and shaping public discourse across diverse communication networks [@levy2019echo]. Despite extensive research on platforms such as Twitter, the impact of echo chambers on YouTube, the second-largest social platform, remains understudied. YouTube's unique structure and user interaction patterns, distinct from platforms like Twitter, may pose challenges in recognizing and understanding echo chambers on this platform.
+Research on social media platforms, such as Twitter and Facebook, extensively explores echo chambers - environments where individuals connect with like-minded peers, reinforcing selective exposure to information aligning with their beliefs [@cinelli2021echo]. These principles, observed on social media platforms marked by informational homogeneity, apply to broader political discourse and policy debates [@jasny2015empirical]. This suggests that the mechanisms of selective exposure observed in social media echo chambers may extend to diverse communication networks [@colleoni2014echo]. These tendencies contribute to polarization and extreme political positions [@colleoni2014echo]. This harms social cohesion and trust, challenging finding common ground between political parties [@mccoy2019toward] and shaping public discourse across diverse communication networks [@levy2019echo]. Despite extensive research on platforms such as Twitter, the impact of echo chambers on YouTube, the second-largest social platform, remains understudied. YouTube's unique structure and user interaction patterns, distinct from platforms like Twitter, may pose challenges in recognizing and understanding echo chambers on this platform.
+
+Recent research in social network analysis indicates a weaker presence of echo chambers, showing a tendency towards heterogeneity in discussions, even on controversial topics [@rochert2020opinion]. However, prior research aggregates comment threads from numerous videos or focuses on singular, high-traffic videos, potentially overlooking the enclosed homogenous interactions typical of echo chambers. This methodological limitation risks underestimating their presence and influence on YouTube. Evidence from Hosseinmardi et al. (2020) challenges assumptions about algorithmic amplification in YouTube echo chambers, revealing them to be more subtle and insular than previously understood [@hosseinmardi2020evaluating]. With the recent addition of user handles on YouTube, allowing individuals to tag each other, there has been a shift in user interactions [@YouTube2022Handles]. This new feature holds the potential to offer insights into the formation of echo chambers, an aspect earlier research did not investigate. The identified gaps, coupled with recent changes in user interactions, necessitate a more targeted approach to precisely capture and analyze the evolving dynamics of social networks, revealing how echo chambers form and influence discourse.
+
+The concern about echo chamber effects in online communities, especially on social media platforms, is pronounced. Research by Cinelli (2021) and Du et al. (2017) emphasizes the contribution of echo chambers to heightened polarization and the formation of distinct opposing groups with online communities [@cinelli2021echo], [@du2017echo]. Platforms like Twitter exemplify polarization attributed to echo chamber effects [@du2017echo]. This trend is alarming as social media platforms evolve from sources of entertainment to influential shapers of the social narrative. Echo chamber effects impact critical aspects of society, including policy-making, political communication, and public discourse on controversial subjects [@cinelli2021echo]. Grusauskaite (2023) underlines this concern, emphasizing social media's role in deepening societal divides and fueling extremist ideologies [@grusauskaite2023debating]. This highlights the importance of investigating echo chamber contexts on YouTube. The heightened significance arises from individuals perceiving videos as more credible than text, particularly in politics [@wittenberg2021minimal]. Given YouTube's status as the largest and most engaging online media consumption platform globally [@hosseinmardi2020evaluating], there is a pressing need to investigate echo chambers within its channels.
+
+To investigate YouTube echo chambers, our study proposes examining smaller, politically focused videos or channels with pronounced viewpoints. This approach aligns with research indicating a higher likelihood of echo chambers in political discussions [@villa2021echo]. Our focus on potentially more insular communities aims to uncover the true extent and nature of echo chambers on YouTube, contributing a nuanced understanding of the platform's social dynamics, especially related to far-right content [@hosseinmardi2020evaluating].
+
+This will be done by conducting two studies:
+
+**RQ 1 ** \emph{To what extent are prominent users present within YouTube channels' comment sections?}
+This study explores the presence of prominent users within YouTube channels' comment networks and their impact on the network structure. We hypothesize that YouTube comment sections feature influential users, drawing a parallel to the social network dynamics observed on Twitter [@sung2013influence]. This is based on the observed similarities in the structural dynamics of these platforms' social networks [@wattenhofer2012youtube]. We will use centrality measures to evaluate the extent of prominent users’ presence in YouTube comment sections. These measures will provide quantitative insights into the influence and connectivity of users within the network. Conditional uniform graphs (CUGs) will be used to contextualize and validate these findings. CUGs will enable us to determine whether the centrality measures observed in the YouTube comment networks are exceptionally high or low, compared to what might be expected in a randomly structured network.
+
+**RQ 2** \emph{To what extent are there echo chambers within YouTube channels’ comment sections?}
+The second study explores the existence of echo chambers within the comment sections of YouTube channels. Building upon our earlier research, which we discussed before, we hypothesize that echo chambers will be present in YouTube channels' comment sections which have a politically pronounced viewpoint. We use Exponential Random Graph Models (ERGMs) to test this hypothesis. This statistical framework allows us to examine the structural patterns of relationships in YouTube comments, providing insights into echo chambers' emergence and characteristics within these channels.
+
+By answering these research questions, our study contributes to understanding social interactions on YouTube, addressing gaps, and exploring new dimensions. These insights are important to grasp how certain individuals or groups can influence conversations and network structures. Our second study investigates the presence and nature of echo chambers, thereby addressing concerns about social media's role in promoting ideological division and polarization. These findings will enhance our understanding of how certain users can initiate or reinforce echo chamber dynamics, leading to a more homogenous environment where similar viewpoints are echoed and amplified. Consequently, these individuals and dynamics can increase polarization and reduce exposure to diverse perspectives, affecting public discourse and social cohesion.
+
+In the remainder of the report, we will progress from discussing the dataset to outlining the rationale behind our chosen research methods. We then present and discuss the results of our studies and conclude with a summary of our findings, their implications and suggestions for future research.
 
 # Methodology
-
 ## Dataset
+A dataset was assembled by scraping the YouTube comment section. Ongehoord Nederland was selected for its unique nature as a YouTube channel, as it is known for broadcasting controversial and pronounced right-wing-oriented viewpoints. Having also compared Ongehoord Nederland to other right-wing-oriented channels in terms of channel subscribers, views, and videos it is relatively a small channel. Together, this makes it an appropriate channel for our study's focus on political echo chambers, especially considering the channel's scale and content nature, which align with the methodological pivot outlined earlier.
+
+The larger the dataset, the more computationally expensive it is. Hence, we randomly selected a sequence of five videos from the channel. Rather than choosing videos randomly across the channel’s history, this approach was intended to increase the chances of finding users who commented on
+multiple videos. Selecting sequentially adjacent videos, yet chosen randomly, allows for a more integrated analysis of user interactions and patterns, avoiding the disjointedness that might arise from sampling videos from widely separated time periods on the channel.
+
+In our dataset, nodes correspond to YouTube users engaged in the comment section using handles, which are unique and short identifiers and start with the “@” symbol. Directed edges in our network are formed based on explicit user interactions. This occurs when a user directly references another by their handle in a comment or is similarly mentioned by others. We restrict our analysis to interactions involving handles, as this clearly indicates directed communication. Comments without such specific mentions are excluded, as we cannot conclusively determine if they are responses to the main thread or to specific individuals, thus ensuring clarity and precision in our network analysis.
+
 <!-- Network plot -->
 (ref:main-network) The plot of the network used for analysis. It shows the majority of the nodes labelled negative.
 ```{r main-network-plot, echo = FALSE, include = TRUE, fig.align='center', fig.cap = "(ref:main-network)", fig.dim=c(8,8)}
@@ -117,6 +133,8 @@ graphics::legend(x = 0.75, y = -.85, c("Negative","Positive","Neutral"),
                  cex = .8, bty = "o", ncol = 1)
 
 ```
+
+Furthermore, our data was initially a weighted network due to the potential for users to comment multiple times on each other's posts, adding complexity to our analysis. However, to simplify and focus on the presence of interactions rather than their frequency, we convert this into an unweighted network. This means we consider whether an interaction occurred between users, regardless of how often it happened.
 
 <!-- Indegree distribution -->
 (ref:degree-in) The plot above shows the indegree distribution for the actors in the network. 
@@ -147,6 +165,8 @@ plot(1:length(degree_distribution_out), degree_distribution_out, type = "h",
      xlab = "Outdegree", ylab = "Frequency")
 ```
 
+Ultimately, we ended up with a network of 324 distinct actors interconnected through 553 ties, derived from comments posted between July 2023 and October 2023. This network is characterized by a notably low in-degree and out-degree, as detailed in Figures \@ref(fig:degree-in), \@ref(fig:degree-out), pointing to its sparse connectivity. Additionally, Table \@ref(tab:dyad-count-table) reveals that reciprocal interactions within this network are infrequent, while unidirectional interactions are more prevalent. The visual representation of the network, depicted in Figure \@ref(fig:main-network-plot), further highlights the sparse connectivity as we see a lot of isolated dyads. In this Figure \@ref(fig:main-network-plot) a small subset of actors with significantly higher degrees of connectivity can also be found, an observation which underscores the relevance of our first study. The network descriptives can be found in Appendix A.
+
 <!-- Table for reciprocal dyads -->
 (ref:dyad-count-table) An overview of the reciprocal dyads. 
 ```{r dyad-count-table, echo = FALSE, include = TRUE, fig.align='center', fig.pos='H'}
@@ -158,8 +178,14 @@ apa_table(dyad_count,
 ```
 
 ### Potential Bias
+Our research methodology, while comprehensive, is not without potential biases that could impact the interpretation of our results. The primary source of bias stems from Ongehoord Nederland as the sole YouTube channel for analysis. This channel's distinct right-wing orientation and ties to specific political ideologies may not represent the broader YouTube community or other political spectrums. Therefore, our findings, while indicative of echo chambers within this particular context, may not be generalizable to other YouTube channels or political orientations.
+
+Another potential bias arises from our method of selecting videos. Although we chose a sequence of five videos randomly to increase the likelihood of finding users commenting on multiple videos, this approach might have inadvertently focused on a specific time frame or subset of topics, which may not encompass the full range of discussions typically found on the channel. This could limit the diversity of user interactions and viewpoints captured in our study.
+
+It is crucial to acknowledge that these biases could influence the conclusions drawn from our study. The results should be interpreted with an understanding of these limitations, and future research should aim to include a more diverse range of channels, video selection methods, and user interaction types to provide a more comprehensive view of echo chambers on YouTube. This will help better understand online discourse's nuances and dynamics, especially in politically charged environments. 
 
 ## Research Rationale
+A shared understanding of ‘echo chambers’ within social networks is essential to address our research questions effectively. Building upon Jasny et al.'s (2015) framework, we recognize echo chambers as social structures marked by significant homophily, where individuals sharing similar views are grouped together [@jasny2015empirical], [@jasny2018shifting], [@jasny2019echo]. This concept is encapsulated in the 'chamber', represented as a network configuration known as a transitive triad. In this configuration, information circulates from one actor (A) to another (C) both directly and via an intermediary (B), illustrating multiple paths of information flow within the same source and endpoint. In this 'chamber,' a speaker, a mediating actor, and a receiver are involved. Information in this configuration can travel directly from the speaker to the receiver or from the speaker through the mediating actor to the receiver. The similarity in content and sentiment of communications between actors with aligned opinions and outlooks identifies the ’echo’ aspect. This phenomenon is visualized in Figure \@ref(fig:echo-chamber-structure).
 
 <!-- Figure for displaying structrue of 030T -->
 (ref:echo-chamber-structure) An echo chamber representation within the structural network configuration, also known as a transitive triad.
@@ -170,28 +196,80 @@ knitr::include_graphics(
   )
 ```
 
-<!-- CUG results -->
-(ref:cug-results) The results of the CUG test. 
-```{r cug-results, echo = FALSE, include = TRUE, fig.align='center', fig.cap = "(ref:cug-results)", fig.dim=c(4,4)}
+To assess the sentiment of a comment within a discussion section, we employed ChatGPT for zero-shot sentiment analysis. This analysis will categorize the comments of individual users as aligning with, being neutral toward, or opposing the political subject in question. ChatGPT will be used for sentiment analysis because it has shown remarkable zero-shot sentiment analysis proficiency, rivaling fine-tuned models such as BERT and state-of-the-art models trained with labeled data within their respective domains [@wang2023chatgpt].
 
-```
+The sentiment focuses on the users' attitudes towards specific political entities, parties, politicians, policy issues, and broader socio-cultural themes. This sentiment was categorized as positive, negative, or neutral, incorporating a nuanced understanding of the complexities and diversities inherent in the topics discussed:
 
-Table: Results of CUG tests.
+\begin{enumerate}
+    \item \textbf{Positive Sentiment:} This indicates approval, support, or positive feelings towards a subject. For instance, a comment expressing hope or confidence in a political movement is classified as positive.
+    \item \textbf{Negative Sentiment:} This reflects dissatisfaction, disapproval, or negative emotions. Comments critical of political parties, policy decisions, or societal issues such as gender identity and LGBTQ+ topics are examples of negative sentiment.
+    \item \textbf{Neutral Sentiment:} This denotes an objective, impartial, or moderate stance, devoid of strong positive or negative emotions, often informative in nature.
+\end{enumerate}
 
-|                           | Empirical Value | Probability versus simulations $Pr(X>=Obs)$ |
-| ------------------------- | --------------- | ------------------------------------------ |
-| **Eigenvector Centrality** | 0.92            | 0.466                                      |
-| **Degree Centrality**      | 0.12            | 0                                          |
-| **Betweenness Centrality** | 0.13            | 0.451                                      |
+This approach enables us to develop a more detailed understanding of public perception and sentiment about the different topics discussed in the comments. This assists in understanding and analyzing the complexity of public opinions and emotions in relation to these diverse subjects.
 
+In assessing our hypothesis for our first research question we use CUGs because we cannot guarantee the normality assumptions required by many statistical tests. CUGs allows us to test our hypotheses despite the statistical complexities of the network representation. We use CUGs to determine whether centrality measures of our observed graph occur at levels exceeding what we would expect by chance. With centrality measures such as eigenvector centrality, degree centrality, and betweenness centrality we aim to identify whether there are central players in our network. Eigenvector centrality is used to recognize influential nodes based not just on their direct connections, but more significantly on their connections to other highly connected and central nodes. Degree centrality is used to highlight nodes that have more connections, providing a measure of popularity. Betweenness centrality is included to identify nodes that act as bridges within the network structure, controlling the flow of information between other nodes.
+
+For future research, methodologies such as the Multiple Regression Quadratic Assignment Procedure (MRQAP) may prove valuable for exploring how various attributes — like subscriber count, number of likes, or number of comments — are associated with centrality measures. Such an approach could contribute to our understanding of how certain attributes predict a node's likelihood of being a central figure.
+
+Echoing Jasny et al.'s (2015) approach, which focused on operationalizing the components of echo chambers in the US climate policy network, our second study also employs ERGMs [@jasny2015empirical]. ERGMs are ideal for this type of analysis due to its ability to comprehensively model complex social networks. It integrates both endogenous network effects and exogenous variables into a unified statistical framework, accurately capturing the intricate dynamics of social interactions [@cranmer2020inferential]. This is important because this allows us to effectively analyze groups which are unified by shared sentiments. Additionally, ERGM's approach of treating the network as a single multivariate observation aligns well with our objective of empirically testing the structure and impact of echo chambers.
 
 # Results
-
 ## Study 1: {-}
+In our first study, we aimed to investigate if the centralization observed in YouTube comment networks — measured through eigenvector, degree, and betweenness centrality — was higher than what would be expected in a random scenario. This was analyzed using Conditional Uniform Graphs (CUGs), conditioned on the network's number of edges.
+
+(ref:cug-results-table) P-values resulting from CUG Tests. 
+```{r cug-results-table, echo = FALSE, include = TRUE, fig.align='center', fig.pos='H'}
+apa_table(cug_results,
+          placement = "h",
+          caption = "(ref:cug-results-table)")
+```
+
+The CUG results, presented in Table \@ref(tab:cug-results-table), provide insight into the network structure in terms of these centrality measures.
+
+For both in-degree and out-degree centrality, the findings were significant. A significant in-degree centrality indicates that certain users in the network receive a lot more interactions than others, highlighting the presence of particularly influential or attention-gathering users. Regarding out-degree centrality, the findings point to certain users being more active in initiating interactions or making connections within the network.
+
+However, the situation is different for eigenvector centrality. Despite its high empirical value of 0.92, the result was not statistically significant. A high empirical value typically indicates a tendency for influential users within the network to be interconnected, suggesting the presence of clusters where influential users are more likely to be connected with each other. However, the non-significant result in this case means that such a tendency of influential users being connected is not different from what could happen in a random network.
+
+The betweenness centrality also showed a non-significant result. This means that the network's nodes do not play a central role as intermediaries in the information flow compared to a random network. This indicates that while there are nodes that help in spreading information, their role is similar to what might occur randomly. 
 
 ## Study 2: {-}
+In this study, we analyse network formation based on the sentiment of user comments. Figure XX presents the result of the ERGM from the best fitting model.
+
+In our initial attempts to fit the model, we encountered challenges with achieving convergence. Our approach replicated the methodology used by Jasny, who also faced similar convergence issues. They resolved this by imposing constraints on the in-degree distribution, a strategy we adopted as well. Implementing this constraint enabled our models to converge more effectively. However, it's important to note that we excluded the edges term from the model specification, as it is unfeasible to estimate it while constraining the in-degree distribution. This adjustment alters the interpretation of our results, as the ERGM now shows how network structures deviate from what would be expected given the fixed out-degree distribution.
+
+We included a term for homophily, \textit{nodematch.sentiment}, to represent our 'echo'. However, with a negative coefficient of -0.19 translating to a log odds of approximately 0.82, this term suggests that sharing the same sentiment inversely influences the formation of ties between two nodes. In other words, nodes with matching sentiments are slightly less likely to form ties than those with differing sentiments.
+
+We also included transitive triads as a term, with \textit{transitiveties}, to represent the 'chamber'. The positive coefficient of 0.75 for \textit{transitiveties}, translating to log odds of about 2.11, indicates a strong influence of transitive relationships in tie formation, irrespective of sentiment. This suggests that the presence of a transitive triad significantly increases the likelihood of tie formation within the network.
+
+The full echo chamber mechanism is represented in the term \textit{transitiveties.sentiment}, with a positive coefficient of 0.4 and a corresponding log odds of approximately 1.49. The significance of both \textit{transitiveties.sentiment} and \textit{transitiveties} implies that the formation of transitive relationships is not due to chance and is influenced by the sentiment attribute. The positive coefficients here indicate a tendency for tie formation in scenarios where transitive relationships have similar sentiments.
+
+It is also worth mentioning that \textit{nodefactor.sentiment.positive} is significant in our model, with a value of 0.52 translating to log odds of approximately 1.68. This finding highlights that comments characterized by positive sentiment are more inclined to establish connections within the network.
+
+Lastly, the term \textit{nodecov.log.total\textunderscore like} is also significant with a coefficient of 0.07, which translates to log odds of approximately 1.07. This indicates that the total likes of an user is a significant predictor for the formation of ties within the network. This finding underscores the role of engagement, as measured by likes, in facilitating connections between nodes in the network.
 
 # Discussion and Conclusion
+Our study aimed to investigate the existence of echo chambers on YouTube, a platform less studied in this context compared to others like Twitter. It also focuses on if there are prominent users as these could initiate or reinforce the echo chamber effects, which in turn contributes to polarization and ideological homogeneity. Our research has uncovered significant insights that not only enhance our theoretical understanding but also offer practical guidance for various stakeholders. Our approach was centered around two key research questions:
+
+\textbf{RQ 1} \emph{To what extent are prominent users present within YouTube channels' comment sections?} \\
+\textbf{RQ 2} \emph{To what extent are there echo chambers within YouTube channels’ comment sections?}\\
+
+Study 1 revealed that while some users are more prominent or active in the network (as shown by the in-degree and out-degree centrality), these users are not more likely to be connected to each other (eigenvector centrality) and their role as information brokers (betweenness centrality) are not significantly different from what might be seen in a random network. This suggests that while there are prominent users in terms of activity, they do not form a cohesive group of influencers or dominate the information brokerage within the network. Looking at the in degree centrality plot (figure plot) it's noticeable there relative high amount of non-negative sentiment nodes . In the discourse environment of the comment section this could possibly indicate an hostile environment for having a different opinion.
+
+In Study 2, we found evidence supporting the existence of echo chambers on YouTube. The formation of transitive ties was also significant, indicating that these are not mere products of randomness. Important to note is that, contrary to the findings of Jasny et al. (2015), our study observed a lack of significant homophily. The lack of significant homophily within the YouTube comment networks, particularly in contrast to the homogeneous environment dominated by negative sentiments, could be partially explained by the insights from Study 1. As the central nodes do not seem to have an influential role in the network and the sentiments of nodes with high degrees seem to.
+
+Another probable possibility could be due to the widespread negative sentiment in our network, making it difficult to observe homophily because most users share this sentiment. The lack of diverse sentiments in our network reduces the chances of forming distinct groups based on sentiment. Although this suggests our network is largely a single, homogeneous cluster, it does not rule out the possibility of smaller clusters forming based on other factors besides sentiment. It does suggest that one could describe our network as one big echo, in which chambers are being formed. 
+
+The findings contribute significantly to the theoretical understanding of social media dynamics as our research extends the concept of echo chambers beyond traditional platforms like Twitter and Facebook, demonstrating their presence in the unique context of YouTube. This contributes to the broader discourse on how digital platforms facilitate ideological segregation and polarization. \\
+
+Understanding the role of prominent users and the dynamics of echo chambers is crucial for a range of stakeholders, including policymakers, educators, and content creators. The study's findings can inform strategies to promote more balanced and diverse online conversations, thereby potentially mitigating the effects of polarization. These strategies could involve strengthening community guidelines, moderating content to prevent extremism, raising awareness about echo chambers, and empowering users to diversify their content exposure.
+
+For policymakers, these insights underscore the need for policies that foster diversity in online discourse and prevent platforms like YouTube from becoming hotbeds of extremism or misinformation. Educators and content creators can leverage these findings to promote critical thinking and digital literacy, equipping audiences to engage constructively in online environments.
+
+The scope for future research is extensive and includes expanding the study to encompass a broader range of YouTube channels and political perspectives, conducting robustness checks for sentiment analysis, and delving deeper into the characteristics of prominent users. Such research could provide a more nuanced understanding of user interactions and opinions, as discussed in Chapter 2, further enriching our knowledge of the dynamics at play in online echo chambers. It is also interesting to further research users with a high in-degree as these individuals are likely to be influenced by the incoming interactions from other users, making them pivotal in the spread and reinforcement of ideas within echo chambers. Utilizing Temporal Exponential Random Graph Models could offer a dynamic view of how sentiments change over time within these networks. This approach could help identify users who are more susceptible to influence, thereby enabling the development of strategies to foster a more balanced and diverse discourse.
+
+In conclusion, our research has revealed the complex dynamics of echo chambers on YouTube, highlighting the significant role of prominent users and the trend towards ideological homogeneity in the comment sections of politically oriented videos. These findings are critical in understanding the unique characteristics of social media platforms and their impact on public discourse and societal polarization. As digital platforms continue to evolve, the insights gained from our study can offer a roadmap for stakeholders in the digital space, aiding in the development of more informed and effective strategies to manage and comprehend the impact of social media on society. This study not only contributes to the academic discourse but also serves as a catalyst for action among policymakers, educators, and content creators, steering us towards a more informed, balanced, and cohesive digital world.
+
 
 \newpage
 
