@@ -1,0 +1,13 @@
+### Input:
+Reacties op een video van dezelfde gebruiker gericht aan andere gebruikers:
+
+[PLAK HIER DE COMMENTS]
+
+### Taak:
+Classificeer elke reactie als positief, negatief of neutraal
+Bepaal het totale sentiment van de gebruiker op basis van de meerderheid van de sentimenten.
+
+### Output:
+per reactie: positief, negatief of neutraal
+sentiment van de gebruiker:  positief, negatief of neutraal
+
