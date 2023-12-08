@@ -1,0 +1,12 @@
+<!-- Plot voor centrality scores voor network -->
+(ref:centralities-plot) Plot for different centralities of our network
+```{r centralities-plot, fig.cap = "(ref:centralities-plot)", echo = TRUE}
+centralities_plot <- snafun::plot_centralities(
+  graph,
+  measures = c("betweenness", "closeness", "degree", "eccentricity"), 
+  directed = TRUE,
+  mode = "all",
+  k = 3,
+  rescaled = FALSE
+)
+```
