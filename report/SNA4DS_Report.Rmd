@@ -39,7 +39,7 @@ output:
 ```{r setup, include = FALSE}
 library("papaja")
 r_refs("r-references.bib")
-load("/Users/huubvandevoort/Downloads/voorHubie.RData")
+load("/Users/huubvandevoort/Downloads/hierstaatveelkakin.RData")
 ```
 
 ```{r analysis-preferences, include = FALSE}
@@ -68,11 +68,9 @@ Only if your citation appears in the text it will also show up in the Reference 
 
 (150 words) -- 0.3 POINTS Summarize the report. Write this as the very last thing.
 
-What is the main topic you are addressing?
-
-what are your research questions and hypotheses?
-
-what are your results and the main conclusion?
+- What is the main topic you are addressing?
+- What are your research questions and hypotheses?
+- What are your results and the main conclusion?
 
 # Introduction
 <!-- Dit heb ik gekopieerd omdat ik references wilde testen -->
@@ -81,14 +79,43 @@ Research on social media platforms, such as Twitter and Facebook, extensively ex
 # Methodology
 
 ## Dataset
+<!-- Network plot -->
+```{r echo = FALSE}
+
+```
+
+<!-- Degree distribution in -->
+```{r echo = FALSE}
+
+```
+
+<!-- Degree distribution out -->
+```{r echo = FALSE}
+
+```
+
+<!-- Table for reciprocal dyads -->
+```{r echo = FALSE}
+
+```
+
+### Potential Bias
 
 ## Research Rationale
 
-# Results and Discussion
+<!-- Figure for displaying structrue of 030T -->
+```{r echo = FALSE}
+
+```
+
+
+# Results
 
 ## Study 1: {-}
 
 ## Study 2: {-}
+
+# Discussion and Conclusion
 
 ```{r echo = FALSE, results = 'asis'}
 plot(gof0)
