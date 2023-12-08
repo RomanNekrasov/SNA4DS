@@ -10,33 +10,46 @@ graph <- igraph::read_graph(file = "~/SNA4DS/data_preparation/prepared_data/netw
 # CUG centrality tests
 
 ```{r}
-betw_f <- function(x, directed = TRUE) {  # note: directed = FALSE!
+betw_f <- function(x, directed = TRUE) {
   x <- snafun::fix_cug_input(x, directed = directed)
   snafun::g_centralize(x, measure = "betweenness", directed = directed)$centralization
 }
 
-deg_f <- function(x, directed = TRUE) {  # note: directed = FALSE!
+deg_f_in <- function(x, directed = TRUE) { 
   x <- snafun::fix_cug_input(x, directed = directed)
-  snafun::g_centralize(x, measure = "degree", directed = directed)$centralization
+  snafun::g_centralize(x, measure = "degree", mode ='in', directed = directed)$centralization
 }
 
-eigen_f <- function(x, directed = TRUE) {  # note: directed = FALSE!
+deg_f_out <- function(x, directed = TRUE) { 
+  x <- snafun::fix_cug_input(x, directed = directed)
+  snafun::g_centralize(x, measure = "degree", mode ='out', directed = directed)$centralization
+}
+
+eigen_f <- function(x, directed = TRUE) {
   x <- snafun::fix_cug_input(x, directed = directed)
   snafun::g_centralize(x, measure = "eigenvector", directed = directed)$centralization
 }
 
 cug_betw <- sna::cug.test(snafun::to_network(graph), mode = "graph", FUN = betw_f, 
                                  cmode = "edges", 
-                                 reps = 1000)
-cug_deg <- sna::cug.test(snafun::to_network(graph), mode = "graph", FUN = deg_f, 
+                                 reps = 10000)
+cug_deg_in <- sna::cug.test(snafun::to_network(graph), mode = "graph", FUN = deg_f_in, 
                                  cmode = "edges", 
-                                 reps = 1000)
+                                 reps = 10000)
+cug_deg_out <- sna::cug.test(snafun::to_network(graph), mode = "graph", FUN = deg_f_out, 
+                                 cmode = "edges", 
+                                 reps = 10000)
 cug_eigen <- sna::cug.test(snafun::to_network(graph), mode = "graph", FUN = eigen_f, 
                                  cmode = "edges", 
-                                 reps = 1000)
-cug_betw
-cug_deg
-cug_eigen
+                                 reps = 10000)
+
+
+cug_results <- data.frame(
+  Centralization = c('betweenness', 'indegree', 'outdegree', 'eigenvector'),
+  P = c(cug_betw$pgteobs, cug_deg_in$pgteobs, cug_deg_out$pgteobs, cug_eigen$pgteobs))
+
+names(cug_results) <- c('centralization measure', 'Pr(X>=Obs)')
+print(cug_results)
 ```
 
 # ERGMs
@@ -51,57 +64,43 @@ log.average_length_comments <- log(igraph::get.vertex.attribute(graph)$average_l
 graph <- igraph::set.vertex.attribute(graph, "log.average_length_comments", value=log.average_length_comments)
 
 network <- snafun::to_network(graph)
+
 ```
 
+## Define ERGM formulas
+
 ```{r}
-formula <- network ~ transitiveties("sentiment") +
-                     transitiveties +
-                     gwidegree(decay = 0.25, fixed=TRUE) 
-                    # gwesp(0.05, fixed = TRUE) +
-                    # nodefactor("sentiment") +
-                    # nodecov("log.average_length_comments") +
-                    # nodecov("log.total_likes")
+# List of formulas
+formulas <- list(
+    network ~ transitiveties("sentiment") + transitiveties + nodematch("sentiment"),
+    network ~ transitiveties("sentiment") + transitiveties + nodematch("sentiment") + nodefactor("sentiment"),
+    network ~ transitiveties("sentiment") + transitiveties + nodematch("sentiment") + nodefactor("sentiment") + gwidegree(decay = 0.05, fixed=TRUE),
+    network ~ transitiveties("sentiment") + transitiveties + nodematch("sentiment") + nodefactor("sentiment") + gwidegree(decay = 0.05, fixed=TRUE) + nodecov("log.average_length_comments"),
+    network ~ transitiveties("sentiment") + transitiveties + nodematch("sentiment") +
+    nodefactor("sentiment") + gwidegree(decay = 0.05, fixed=TRUE) + nodecov("log.total_likes"),
+    network ~ transitiveties("sentiment") + transitiveties + nodematch("sentiment") +
+    nodefactor("sentiment") + gwidegree(decay = 0.05, fixed=TRUE) + nodecov("log.average_length_comments") + nodecov("log.total_likes")
+)
 
-model <- ergm::ergm(formula,
-                    constraints = ~odegrees,
-                    control = ergm::control.ergm(MCMC.burnin = 50000,
-                                                  MCMC.samplesize = 100000,
-                                                  seed = 1223,
-                                                  MCMLE.maxit = 10,
-                                                  parallel = 32,
-                                                  parallel.type = "PSOCK"),
-                    verbose = 1)
-
-summary(model)
 ```
 
+## Run ERGMs
+
 ```{r}
-# Base formula
-base_formula <- network ~ transitiveties("sentiment") + transitiveties
-
-# List of terms to add
-additional_terms <- list("gwesp(0.05, fixed = TRUE)", 
-                         "nodefactor('sentiment')", 
-                         "nodecov('log.average_length_comments')", 
-                         "nodecov('log.total_likes')")
-
-# Initialize list to store models
+# Initialize lists to store models and summaries
 models <- list()
 model_summaries <- list()
 
-# Loop over additional terms
-for (i in seq_along(additional_terms)) {
-    # Create new formula by adding the term
-    new_formula <- as.formula(paste(deparse(base_formula), "+", additional_terms[i]))
-    
-    # Fit the model
-    model <- ergm::ergm(new_formula,
+# Loop over the formulas
+for (i in seq_along(formulas)) {
+    # Fit the model with the current formula
+    model <- ergm::ergm(formulas[[i]],
                         constraints = ~odegrees,
                         control = ergm::control.ergm(MCMC.burnin = 50000,
                                                       MCMC.samplesize = 100000,
                                                       seed = 1223,
                                                       MCMLE.maxit = 10,
-                                                      parallel = 32,
+                                                      parallel = 24,
                                                       parallel.type = "PSOCK"),
                         verbose = 1)
     
@@ -114,10 +113,15 @@ for (i in seq_along(additional_terms)) {
 ```
 
 ```{r}
-model.diagnostics <- ergm::mcmc.diagnostics(model)
+models_tabel <- texreg::screenreg(models)
+models_tabel
 ```
 
 ```{r}
-model.gof <- ergm::gof(model)
-snafun::stat_plot_gof(model.gof)
+ergm::mcmc.diagnostics(models$model_5)
+```
+
+```{r}
+model_5.gof <- ergm::gof(models$model_5)
+snafun::stat_plot_gof(model_5.gof)
 ```
