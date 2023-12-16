@@ -17,7 +17,9 @@
 </details>
 
 ## About The Project
-Examine the presence and structure of echo chambers within YouTube comment sections, focusing on channels producing far right-wing content.
+For the subject Social Network Analysis for Data Scientists (SNA4DS) [JM2080-M-6](https://uvt.osiris-student.nl/onderwijscatalogus/extern/examenprogramma/36700/3N300-2022?taal=en/)
+at the Jheronimus Academy of Data Science ([JADS](https://www.jads.nl/)) we examined the presence and structure of echo chambers within YouTube comment 
+sections, focusing on channels producing far right-wing content.
 
 ### Built With
 [![Python 3.11](https://img.shields.io/badge/Python-3.11-3776AB)](https://www.python.org/downloads/)

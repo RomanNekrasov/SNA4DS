@@ -1,5 +1,4 @@
-<!-- Plot voor centrality scores voor network -->
-(ref:centralities-plot) Plot for different centralities of our network
+(ref:centralities-plot) The centrality scores for each node in our network plotted.
 ```{r centralities-plot, fig.cap = "(ref:centralities-plot)", echo = TRUE}
 centralities_plot <- snafun::plot_centralities(
   graph,
@@ -11,7 +10,10 @@ centralities_plot <- snafun::plot_centralities(
 )
 ```
 
-```{r indegree-plot, echo = FALSE}
+(ref:indegree-plot) The indegree plotted for each node in the network
+```{r indegree-plot, fig.cap = "(ref:indegree-plot)", fig.height = 8, echo = TRUE}
+# Plotting indegree for each node 
+# Coloring each node based on its sentiment
 igraph::V(graph)$color <- "orange"
 igraph::V(graph) [ sentiment == 'negative' ]$color <- "#F25F5C"
 igraph::V(graph) [ sentiment == 'positive' ]$color <- "#9DBF9E"
@@ -23,11 +25,7 @@ my_df <- data.frame(
   1:324
   )
 
-# v_degree <- snafun::v_degree(graph, mode = "in", )
 v_degree <- igraph::degree(graph, mode = "in")
-# names(v_degree) <- "degree"
-
-# my_df[is.na(my_df)] <- 0
 
 my_df <- cbind(my_df, v_degree)
 
@@ -41,14 +39,21 @@ plot(y = my_df$new_id,
      type = "b",
      pch = 16)
 
-# Add a legend
-legend("bottomright",                # Location of the legend. Change as needed.
-       legend = c("Negative: 253", "Positive: 6", "Neutral: 62"),  # Labels in the legend
-       col = c("#F25F5C", "#9DBF9E", "orange"),         # Colors corresponding to labels
+# Adding a legend
+legend("topright", # Location of the legend. Change as needed.
+       legend = c("Negative: 253", 
+                  "Positive: 6", 
+                  "Neutral: 62"),  # Labels in the legend
+       col = c("#F25F5C", 
+               "#9DBF9E", 
+               "orange"), # Colors corresponding to labels
        pch = 16)
 ```
 
-```{r out-degree-plot, echo = FALSE}
+(ref:outdegree-plot) The outdegree plotted for each node in the network
+```{r outdegree-plot, fig.cap = "(ref:outdegree-plot)", fig.height = 8, echo = TRUE}
+# Plotting outdegree for each node 
+# Coloring each node based on its sentiment
 igraph::V(graph)$color <- "orange"
 igraph::V(graph) [ sentiment == 'negative' ]$color <- "#F25F5C"
 igraph::V(graph) [ sentiment == 'positive' ]$color <- "#9DBF9E"
@@ -60,11 +65,7 @@ my_df <- data.frame(
   1:324
   )
 
-# v_degree <- snafun::v_degree(graph, mode = "in", )
 v_degree <- igraph::degree(graph, mode = "out")
-# names(v_degree) <- "degree"
-
-# my_df[is.na(my_df)] <- 0
 
 my_df <- cbind(my_df, v_degree)
 
@@ -79,27 +80,42 @@ plot(y = my_df$new_id,
      pch = 16)
 
 # Add a legend
-legend("topright",                # Location of the legend. Change as needed.
-       legend = c("Negative: 253", "Positive: 6", "Neutral: 62"),  # Labels in the legend
-       col = c("#F25F5C", "#9DBF9E", "orange"),         # Colors corresponding to labels
+legend("topright", # Location of the legend
+       legend = c("Negative: 253", 
+                  "Positive: 6", 
+                  "Neutral: 62"), # Labels in the legend
+       col = c("#F25F5C", 
+               "#9DBF9E", 
+               "orange"), # Colors corresponding to labels
        pch = 16)
 ```
 
-# ERGM Results {-}
-```{r ergm-results-plot, echo = FALSE, fig.height=10, warning = FALSE}
+# ERGM Results \
+We display the results of the different models we ran as well as the diagnostics for model 5.\
+(ref:ergm-results-plot) Boxplots showing the terms SEs for the different model configurations.
+```{r ergm-results-plot, echo = TRUE, fig.height=7, warning = FALSE, message = FALSE} 
 texreg::plotreg(models)
 ```
+\newpage
 
+## Model Diagnostics of model 5 \
+(ref:mcmc-diagnostics) The MCMC diagnostics for model 5.
+```{r mcmc-diagnostics, echo = TRUE, results = 'asis', include = TRUE, fig.height=8, fig.align='center', fig.cap="(ref:mcmc-diagnostics)"}
+# Plotting MCMC diagnostic
+model_5 <- models$model_5
+par(mai=c(.6,0.3,.4,0.3), omi=c(.1,.1,.1,.1)) # setting margins due to error
 
-(ref:ergm-results-table) Results for the ERGM models
-```{r ergm-results-table, echo = FALSE, warning = FALSE}
-
-knitr::kable(
-  texreg::matrixreg(models),
-  align = 'c',
-  caption = "(ref):ergm-results-table"
-             )
+ergm::mcmc.diagnostics(
+  model_5,
+  which = c("plots")
+  )
 
 ```
+\newpage
 
+## Goodness of Fit of model 5 \
+(ref:gof-model5) The plot below shows the Goodness of Fit statistics for model 5
+```{r gof-model5, echo = FALSE, fig.cap="(ref:gof-model5)"}
+plot(model_5.gof)
+```
 

@@ -2,17 +2,17 @@
 If you feel it necessary to include an appendix, it goes here.
 -->
 
-This first appendix includes all of the R chunks of code that were hidden throughout the document (using the `include = FALSE` chunk tag) to help with readibility and/or setup.
+This first appendix includes all of the R chunks of code that were hidden throughout the document to help with reproducibility readibility and/or setup.
 
 **R set-up code**
 
-```{r ref.label='r setup', results='hide', echo = TRUE, eval=FALSE}
+```{r ref.label='setup', echo = TRUE, eval=FALSE}
 ```
 
-```{r ref.label='analysis-preferences', results='hide', echo = TRUE, eval=FALSE}
+```{r ref.label='analysis-preferences', echo = TRUE, eval=FALSE}
 ```
 
-**In Chapter 3**
+**R code for plots and tables**
 
 ```{r ref.label='main-network-plot', results='hide', echo = TRUE, eval=FALSE}
 ```
@@ -27,6 +27,9 @@ This first appendix includes all of the R chunks of code that were hidden throug
 ```
 
 ```{r ref.label='echo-chamber-structure', results='hide', echo = TRUE, eval=FALSE}
+```
+
+```{r ref.label='cug-results-table', results='hide', echo = TRUE, eval=FALSE}
 ```
 
 
