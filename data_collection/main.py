@@ -6,7 +6,6 @@ import os
 import logging
 import argparse
 
-from config import constants as c
 from collect_edge_data import collect_comments_of_video
 from collect_vertex_data import collect_vertex_data
 from match_receiver_id import match_receiver_id

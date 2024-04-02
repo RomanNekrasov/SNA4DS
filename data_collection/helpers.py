@@ -1,6 +1,5 @@
 from config import constants as c
 import googleapiclient.discovery
-import pandas as pd
 
 
 def enable_api():

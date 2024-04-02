@@ -4,7 +4,6 @@ import pandas as pd
 import logging
 import sys
 import os
-import googleapiclient.discovery
 from helpers import enable_api, add_to_frame
 
 # Disable OAuthlib's HTTPS verification when running locally.

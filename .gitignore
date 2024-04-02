@@ -161,7 +161,7 @@ cython_debug/
 .idea/
 
 # Ignoring the personal constants file
-config/personalConstants.py
+data_collection/config/personal_constants.py
 
 # Datafiles
 test_data/
